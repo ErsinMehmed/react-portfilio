@@ -67,7 +67,7 @@ const handleDownload = () => {
 
 const ProfileCard = () => {
   return (
-    <div className="lg:w-[350px] xl:w-96 hidden lg:block h-screen fixed">
+    <div className="lg:w-[350px] xl:w-96 hidden lg:block">
       <div className="w-full mb-6 lg:mb-0 mx-auto relative bg-white text-center px-6 rounded-[20px] mt-[180px] md:mt-[220px] lg:mt-0 shadow">
         <img
           src={"images/profile.jpg"}
@@ -121,6 +121,7 @@ const ProfileCard = () => {
 
                   <div className="text-left ml-2.5 font-semibold text-slate-800">
                     <p className="text-xs text-slate-500">{item.title}</p>
+
                     {index === 2 || index === 3 ? (
                       <a
                         className="hover:underline transition-all"
@@ -156,4 +157,3 @@ const ProfileCard = () => {
 };
 
 export default ProfileCard;
-

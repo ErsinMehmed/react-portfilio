@@ -45,6 +45,7 @@ const Home = () => {
           have been programming for 3 1/2 years, both at university and in my
           spare time, and soon also at work.
         </p>
+
         <p className="text-[#44566c] leading-7">
           I have theoretical and practical knowledge of back-end and front-end
           programming. My stronger side is web programming. You can find on this
@@ -69,6 +70,7 @@ const Home = () => {
                 <h3 className="text-[23px] font-semibold text-slate-700">
                   {item.title}
                 </h3>
+
                 <p className="text-[#44566C] text-[15px] text-justify">
                   {item.text}
                 </p>
@@ -82,4 +84,3 @@ const Home = () => {
 };
 
 export default Home;
-
