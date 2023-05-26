@@ -1,33 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import IconUser from "./../icons/User";
-import IconRocket from "./../icons/Rocket";
-import IconStar from "./../icons/Star";
-import IconDocument from "./../icons/Document";
-
-const items = [
-  {
-    title: "About",
-    href: "/",
-    icon: IconUser,
-  },
-
-  {
-    title: "Resume",
-    href: "/resume",
-    icon: IconDocument,
-  },
-
-  {
-    title: "Project",
-    href: "/project",
-    icon: IconRocket,
-  },
-  {
-    title: "Certification",
-    href: "/certification",
-    icon: IconStar,
-  },
-];
+import data from "../Data";
 
 const Header = () => {
   const location = useLocation();
@@ -36,7 +8,7 @@ const Header = () => {
     <header className="w-fit h-fit hidden lg:block p-5 mb-8 rounded-2xl bg-white shadow">
       <nav className="hidden lg:block">
         <ul className="flex">
-          {items.map((item) => {
+          {data.headerLinks.map((item) => {
             return (
               <li key={item.href}>
                 <Link
@@ -62,4 +34,3 @@ const Header = () => {
 };
 
 export default Header;
-

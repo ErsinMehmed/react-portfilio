@@ -1,65 +1,5 @@
-import IconFacebook from "./../icons/Facebook";
-import IconLinkedIn from "./../icons/LinkedIn";
-import IconInstagram from "./../icons/Instagram";
-import IconGitHub from "./../icons/GitHub";
-import IconUser from "./../icons/User";
-import IconLocation from "./../icons/Location";
-import IconPhone from "./../icons/Phone";
-import IconEmail from "./../icons/Email";
-import IconSpeaker from "../icons/Speaker";
 import IconDownload from "../icons/Download";
-
-const socialLinks = [
-  {
-    href: "https://www.facebook.com/ersin.mehmed/",
-    icon: IconFacebook,
-  },
-  {
-    href: "https://github.com/ErsinMehmed",
-    icon: IconInstagram,
-  },
-  {
-    href: "https://www.linkedin.com/in/ersin-hyusein-72a184241/",
-    icon: IconLinkedIn,
-  },
-  {
-    href: "https://github.com/ErsinMehmed",
-    icon: IconGitHub,
-  },
-];
-
-const personalInfo = [
-  {
-    title: "Age",
-    text: "23",
-    icon: IconUser,
-    iconColor: "text-red-400",
-  },
-  {
-    title: "Location",
-    text: "Varna, Bulgaria",
-    icon: IconLocation,
-    iconColor: "text-pink-400",
-  },
-  {
-    title: "Phone",
-    text: "+359 899 626273",
-    icon: IconPhone,
-    iconColor: "text-emerald-400",
-  },
-  {
-    title: "Email",
-    text: "ersin99mehmed@abv.bg",
-    icon: IconEmail,
-    iconColor: "text-blue-400",
-  },
-  {
-    title: "Languages",
-    text: "Bulgarian, English, Turkish",
-    icon: IconSpeaker,
-    iconColor: "text-purple-400",
-  },
-];
+import data from "../Data";
 
 const handleDownload = () => {
   window.open("files/Ersin-Hyusein-CV.pdf", "_blank");
@@ -67,7 +7,7 @@ const handleDownload = () => {
 
 const ProfileCard = () => {
   return (
-    <div className="lg:w-[350px] xl:w-96 hidden lg:block">
+    <div className="lg:w-[350px] xl:w-[480px] hidden lg:block">
       <div className="w-full mb-6 lg:mb-0 mx-auto relative bg-white text-center px-6 rounded-[20px] mt-[180px] md:mt-[220px] lg:mt-0 shadow">
         <img
           src={"images/profile.jpg"}
@@ -85,7 +25,7 @@ const ProfileCard = () => {
           </h3>
 
           <div className="flex justify-center space-x-3">
-            {socialLinks.map((link, index) => {
+            {data.socialLinks.map((link, index) => {
               const IconComponent = link.icon;
               return (
                 <a
@@ -103,12 +43,12 @@ const ProfileCard = () => {
           </div>
 
           <div className="px-7 py-6 rounded-2xl mt-7 bg-[#F3F6F6]">
-            {personalInfo.map((item, index) => {
+            {data.personalInfo.map((item, index) => {
               return (
                 <div
                   key={index}
                   className={`flex ${
-                    index === personalInfo.length - 1
+                    index === data.personalInfo.length - 1
                       ? ""
                       : "border-b border-gray-200"
                   } py-2.5`}

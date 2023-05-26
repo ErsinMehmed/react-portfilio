@@ -1,12 +1,11 @@
-import Layout from "./../components/Layout";
+import Layout from "../components/Layout";
 
 const Certification = () => {
   return (
     <div>
-      <Layout>мехмед</Layout>
+      <Layout>ivan</Layout>
     </div>
   );
 };
 
 export default Certification;
-

@@ -1,35 +1,5 @@
-import Layout from "./../components/Layout";
-import IconUIdesign from "./../icons/UIdesign";
-import IconAppDev from "./../icons/AppDev";
-import IconManagement from "./../icons/Management";
-import IconWebDev from "./../icons/WebDev";
-
-const skills = [
-  {
-    title: "Design",
-    text: "I specialize in creating visually captivating and user-friendly designs that leave a lasting impression. Each design is meticulously crafted to align with every brand identity and meet specific goals.",
-    icon: IconUIdesign,
-    color: "bg-[#fcf4ff]",
-  },
-  {
-    title: "App Development",
-    text: "With a passion for innovation and a keen eye for every detail, I specialize in creating exceptional applications that captivate. Through a collaborative and client-focused approach.",
-    icon: IconAppDev,
-    color: "bg-[#fefaf0]",
-  },
-  {
-    title: "Management",
-    text: "As an innovator, I bring a strategic mindset and hands-on approach to every project. I have experience leading small initiatives, ensuring seamless coordination and alignment with organizational goals.",
-    icon: IconManagement,
-    color: "bg-[#fff0f8]",
-  },
-  {
-    title: "Web Development",
-    text: "In today's, a strong online presence is essential businesses. As a developer, I specialize in creating user-centric web apps/systems/websites that not only attract attention but also deliver exceptional functionality.",
-    icon: IconWebDev,
-    color: "bg-[#f3faff]",
-  },
-];
+import Layout from "../components/Layout";
+import data from "../Data";
 
 const Home = () => {
   return (
@@ -59,7 +29,7 @@ const Home = () => {
       </h3>
 
       <div className="grid gap-7 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
-        {skills.map((item, index) => {
+        {data.mainSkills.map((item, index) => {
           return (
             <div
               key={index}
