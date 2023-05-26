@@ -1,12 +1,7 @@
 import Layout from "../components/Layout";
 
 const Project = () => {
-  return (
-    <div>
-      <Layout>мехмед</Layout>
-    </div>
-  );
+  return <Layout>мехмед</Layout>;
 };
 
 export default Project;
-
