@@ -29,24 +29,22 @@ const Home = () => {
       </h3>
 
       <div className='grid gap-7 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2'>
-        {data.mainSkills.map((item, index) => {
-          return (
-            <div
-              key={index}
-              className={`flex ${item.color} gap-4 rounded-xl p-6`}>
-              <item.icon className='w-9 h-9 flex-shrink-0 mt-0.5' />
-              <div className='space-y-2'>
-                <h3 className='text-[23px] font-semibold text-slate-700'>
-                  {item.title}
-                </h3>
+        {data.mainSkills.map((item, index) => (
+          <div
+            key={index}
+            className={`flex ${item.color} gap-4 rounded-xl p-6`}>
+            <item.icon className='w-9 h-9 flex-shrink-0 mt-0.5' />
+            <div className='space-y-2'>
+              <h3 className='text-[23px] font-semibold text-slate-700'>
+                {item.title}
+              </h3>
 
-                <p className='text-[#44566C] text-[15px] text-justify'>
-                  {item.text}
-                </p>
-              </div>
+              <p className='text-[#44566C] text-[15px] text-justify'>
+                {item.text}
+              </p>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </Layout>
   );

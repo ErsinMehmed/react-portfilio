@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 const Certification = () => {
   return (
     <div>
-      <Layout>ivan</Layout>
+      <Layout>ersin</Layout>
     </div>
   );
 };

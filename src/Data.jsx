@@ -113,8 +113,15 @@ const data = {
   ],
   experiences: [
     {
+      title: "Backend developer",
+      period: "08.2023 - Present",
+      location: "Varna",
+      company: "MyPos Technologies",
+      color: "bg-[#fcf4ff]",
+    },
+    {
       title: "Full stack developer",
-      period: "10.2022 - Present",
+      period: "10.2022 - 07.2023",
       location: "Varna",
       company: "James IT Services",
       color: "bg-[#eef5fa]",
@@ -178,13 +185,13 @@ const data = {
     {
       title: "HTML",
       percentage: "100",
-      kind: "Front-end",
+      kind: "Frontend",
       description: "I am fluent in HTML. I have used HTML in many projects.",
       color: "bg-red-400",
     },
     {
       title: "CSS",
-      kind: "Front-end",
+      kind: "Frontend",
       description:
         "I am excellent at CSS. I have used CSS in many of my projects. I am skilled in using grid and flexbox for positioning elements, and I also use CSS for animating elements.",
       percentage: "90",
@@ -192,7 +199,7 @@ const data = {
     },
     {
       title: "Tailwind",
-      kind: "Front-end",
+      kind: "Frontend",
       description:
         "I am excellent at Tailwind. I have used Tailwind in many of my projects.",
       percentage: "90",
@@ -200,7 +207,7 @@ const data = {
     },
     {
       title: "Bootstrap",
-      kind: "Front-end",
+      kind: "Frontend",
       description:
         "I am proficient in Bootstrap. I have used Bootstrap in one of my projects.",
       percentage: "70",
@@ -208,7 +215,7 @@ const data = {
     },
     {
       title: "JavaScript",
-      kind: "Front-end",
+      kind: "Frontend",
       description:
         "I am proficient in JavaScript. I have used JavaScript in many of my projects. I use JS for animations, form validations, showing and hiding elements, and more.",
       percentage: "70",
@@ -216,7 +223,7 @@ const data = {
     },
     {
       title: "Vue.js",
-      kind: "Front-end",
+      kind: "Frontend",
       percentage: "70",
       description:
         "I am proficient in Vue.js. I have used it in one of my professional projects.",
@@ -224,67 +231,79 @@ const data = {
     },
     {
       title: "Inertia.js",
-      kind: "Front-end",
+      kind: "Frontend",
       percentage: "50",
       color: "bg-indigo-400",
     },
     {
       title: "React.js",
-      kind: "Front-end",
-      percentage: "50",
+      kind: "Frontend",
+      percentage: "60",
       color: "bg-blue-400",
     },
     {
-      title: "jQuery",
-      kind: "Front-end",
-      percentage: "70",
-      description:
-        "I am proficient in jQuery. I have used jQuery in many of my projects. I use the library for real-time element manipulation without the need for button clicks.",
+      title: "React Mobx",
+      kind: "Frontend",
+      percentage: "60",
       color: "bg-sky-400",
     },
     {
-      title: "AJAX",
-      kind: "Front-end",
-      percentage: "60",
+      title: "jQuery",
+      kind: "Frontend",
+      percentage: "70",
       description:
-        "I have been using AJAX for some time now. I have used AJAX in two projects. I use the technology for dynamicAlly retrieving and saving data from the Database.",
+        "I am proficient in jQuery. I have used jQuery in many of my projects. I use the library for real-time element manipulation without the need for button clicks.",
       color: "bg-cyan-400",
     },
     {
-      title: "PHP",
-      kind: "Back-end",
-      percentage: "70",
+      title: "AJAX",
+      kind: "Frontend",
+      percentage: "60",
       description:
-        "I am very proficient in PHP. I have used PHP for data retrieval, CRUD operations, functionalities, and more.",
+        "I have been using AJAX for some time now. I have used AJAX in two projects. I use the technology for dynamicAlly retrieving and saving data from the Database.",
       color: "bg-teal-400",
     },
     {
-      title: "Laravel",
-      kind: "Back-end",
-      percentage: "50",
-      description: "I develop projects at work using Laravel.",
+      title: "PHP",
+      kind: "Backend",
+      percentage: "70",
+      description:
+        "I am very proficient in PHP. I have used PHP for data retrieval, CRUD operations, functionalities, and more.",
       color: "bg-emerald-400",
     },
     {
-      title: ".NET",
-      kind: "Back-end",
+      title: "Symfony",
+      kind: "Backend",
       percentage: "60",
-      description: "Having a good command of .NET, my level is advanced.",
       color: "bg-green-400",
     },
     {
-      title: "ASP.NET",
-      kind: "Back-end",
-      percentage: "60",
-      description: "I am good at ASP.NET. My level is advanced.",
+      title: "Laravel",
+      kind: "Backend",
+      percentage: "50",
+      description: "I develop projects at work using Laravel.",
       color: "bg-lime-400",
     },
     {
+      title: ".NET",
+      kind: "Backend",
+      percentage: "60",
+      description: "Having a good command of .NET, my level is advanced.",
+      color: "bg-yellow-400",
+    },
+    {
+      title: "ASP.NET",
+      kind: "Backend",
+      percentage: "60",
+      description: "I am good at ASP.NET. My level is advanced.",
+      color: "bg-amber-400",
+    },
+    {
       title: "Java",
-      kind: "Back-end",
+      kind: "Backend",
       percentage: "30",
       description: "I know the basics of JAVA.",
-      color: "bg-yellow-400",
+      color: "bg-orange-400",
     },
     {
       title: "MySQL",
@@ -292,7 +311,7 @@ const data = {
       percentage: "80",
       description:
         "I am fluent in MySQL. I have used MySQL in several projects. I am well versed in CRUD operations.",
-      color: "bg-amber-400",
+      color: "bg-red-400",
     },
     {
       title: "SQL",
@@ -300,37 +319,37 @@ const data = {
       percentage: "70",
       description:
         "I am fluent in SQL. I have used SQL in several projects. I am well versed in CRUD operations.",
-      color: "bg-orange-400",
+      color: "bg-pink-400",
     },
     {
       title: "Git",
       kind: "Other",
       percentage: "60",
-      color: "bg-red-400",
+      color: "bg-rose-400",
     },
     {
       title: "Power BI",
       kind: "Other",
       percentage: "60",
-      color: "bg-pink-400",
+      color: "bg-purple-400",
     },
     {
       title: "Qlik Sense",
       kind: "Other",
       percentage: "70",
-      color: "bg-rose-400",
+      color: "bg-fuchsia-400",
     },
     {
       title: "Dynamics 365",
       kind: "Other",
       percentage: "60",
-      color: "bg-purple-400",
+      color: "bg-pink-400",
     },
     {
       title: "Jira",
       kind: "Other",
       percentage: "90",
-      color: "bg-fuchsia-400",
+      color: "bg-rose-400",
     },
   ],
 };

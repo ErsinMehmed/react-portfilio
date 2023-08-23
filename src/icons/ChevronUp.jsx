@@ -2,7 +2,7 @@ const ChevronUp = ({ className }) => (
   <svg
     fill='none'
     viewBox='0 0 24 24'
-    strokeWidth='2.3'
+    strokeWidth='2.5'
     stroke='currentColor'
     className={className || "w-6 h-6 mx-auto"}>
     <path
