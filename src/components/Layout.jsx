@@ -26,12 +26,8 @@ const Layout = (props) => {
   };
 
   return (
-    <div className='w-full bg-blue-300 pb-8 bg-gradient-to-r from-purple-200 via-pink-100 to-pink-200'>
-      <motion.div
-        className='lg:px-4 xl:px-32 2xl:px-64 flex gap-10 pt-40'
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}>
+    <div className='w-full bg-blue-300 pb-8 bg-gradient-to-r from-purple-100 via-pink-50 to-pink-100'>
+      <div className='lg:px-4 xl:px-32 2xl:px-64 lg:flex gap-10 pt-0.5 lg:pt-40'>
         <ProfileCard />
 
         <div className='w-full'>
@@ -40,15 +36,20 @@ const Layout = (props) => {
           </div>
 
           <motion.div
-            className={`lg:rounded-2xl bg-white pt-12 md:py-10 ${props.classes} shadow`}
+            className={`lg:rounded-2xl bg-white py-8 lg:py-10 ${props.classes} shadow`}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}>
+            transition={{ duration: 0.6 }}>
+            <h2 className='font-bold text-3xl sm:text-4xl text-slate-700 flex items-center'>
+              {props.header}
+              <div className='h-0.5 w-32 sm:w-44 ml-8 bg-gradient-to-r from-[#FA5252] to-[#DD2476] mt-1.5 rounded' />
+            </h2>
+
             {props.children}
             <Footer />
           </motion.div>
         </div>
-      </motion.div>
+      </div>
 
       {showScrollButton && (
         <button

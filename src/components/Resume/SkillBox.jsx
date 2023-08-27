@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 const SkillBox = (props) => {
   return (
     <motion.div
-      key={props.index}
       className='mb-5'
       initial={props.viewed ? { opacity: 0, y: 20 } : {}}
       animate={props.viewed ? { opacity: 1, y: 0 } : {}}
