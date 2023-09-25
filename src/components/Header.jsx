@@ -16,7 +16,7 @@ const Header = () => {
   });
 
   return (
-    <header className='w-fit h-fit hidden lg:block p-5 mb-8 rounded-2xl bg-white shadow'>
+    <header className='w-fit h-fit hidden lg:block p-4 mb-8 rounded-2xl bg-white shadow'>
       <nav className='hidden lg:block'>
         <ul className='flex'>
           {data.headerLinks.map((item) => (
@@ -24,8 +24,8 @@ const Header = () => {
               <Link
                 className={`${
                   location.pathname === item.href
-                    ? "text-white bg-gradient-to-r from-[#FA5252] to-[#DD2476]"
-                    : "text-slate-800 hover:text-white hover:bg-gradient-to-r from-[#FA5252] to-[#DD2476] transition-all bg-[#f3f6f6]"
+                    ? "text-white bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0]"
+                    : "text-slate-700 hover:text-white hover:bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0] transition-all bg-[#f3f6f6]"
                 } w-[85px] h-[85px] flex items-center justify-center mx-2.5 rounded-lg text-[13px] font-semibold shadow`}
                 to={item.href}>
                 <div className='text-center'>

@@ -1,11 +1,11 @@
 import IconDownload from "../icons/Download";
 import data from "../Data";
 
-const handleDownload = () => {
-  window.open("files/Ersin-Hyusein-CV.pdf", "_blank");
-};
-
 const ProfileCard = () => {
+  const handleDownload = () => {
+    window.open("files/Ersin-Hyusein-CV.pdf", "_blank");
+  };
+
   return (
     <div className='lg:w-[350px] xl:w-[480px] lg:block'>
       <div className='w-full mb-6 lg:mb-0 mx-auto relative bg-white text-center px-6 lg:rounded-[20px] mt-40 sm:mt-44 md:mt-56 lg:mt-0 shadow'>
@@ -27,13 +27,14 @@ const ProfileCard = () => {
           <div className='flex justify-center space-x-3'>
             {data.socialLinks.map((link, index) => {
               const IconComponent = link.icon;
+
               return (
                 <a
                   key={index}
                   href={link.href}
                   target='_blank'
                   rel='noreferrer'>
-                  <span className='w-10 h-10 flex items-center group justify-center rounded-lg bg-[#f3f6f6] hover:bg-gradient-to-r from-[#FA5252] to-[#DD2476] text-[#1773EA]'>
+                  <span className='w-10 h-10 flex items-center group justify-center rounded-lg bg-[#f3f6f6] hover:bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0] text-[#1773EA]'>
                     <IconComponent />
                   </span>
                 </a>
@@ -51,18 +52,16 @@ const ProfileCard = () => {
                     : "border-b border-gray-200"
                 } py-2.5`}>
                 <span
-                  className={`w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg bg-white ${item.iconColor} shadow-md`}>
+                  className={`w-10 h-10 flex items-center justify-center rounded-lg bg-white ${item.iconColor} shadow-md`}>
                   <item.icon className='w-5 h-5' />
                 </span>
 
                 <div className='text-left ml-2.5 font-semibold text-slate-800'>
-                  <p className='text-xs sm:text-sm text-slate-500'>
-                    {item.title}
-                  </p>
+                  <p className='text-sm text-slate-500'>{item.title}</p>
 
                   {index === 2 || index === 3 ? (
                     <a
-                      className='hover:underline transition-all text-xs sm:text-sm'
+                      className='hover:underline transition-all text-sm'
                       href={
                         index === 2
                           ? "tel:+359 899 626273"
@@ -71,7 +70,7 @@ const ProfileCard = () => {
                       {item.text}
                     </a>
                   ) : (
-                    <p className='text-xs sm:text-sm'>{item.text}</p>
+                    <p className='text-sm'>{item.text}</p>
                   )}
                 </div>
               </div>
@@ -80,9 +79,9 @@ const ProfileCard = () => {
 
           <button
             type='button'
-            className='mx-auto flex items-center sm:text-xl font-semibold rounded-3xl mt-4 sm:mt-6 bg-gradient-to-r from-[#DD2476] to-[#fa5252ef] hover:from-[#fa5252ef] hover:to-[#DD2476] px-8 sm:px-10 py-2 sm:py-3 text-white active:scale-95 transition-all'
+            className='mx-auto flex items-center sm:text-xl font-semibold rounded-3xl mt-5 sm:mt-6 bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0] hover:from-[#ffc3a0] hover:to-[#ffafbd] px-8 sm:px-10 py-2 sm:py-3 text-white active:scale-95 transition-all'
             onClick={handleDownload}>
-            <IconDownload className='w-5 h-5 sm:w-6 sm:h-6 mr-2 mt-0.5 sm:mt-1' />
+            <IconDownload className='w-6 h-6 mr-2 mt-0.5 sm:mt-1' />
             Download CV
           </button>
         </div>
