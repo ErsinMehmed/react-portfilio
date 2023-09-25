@@ -83,7 +83,7 @@ const Resume = () => {
           Professional Skills
         </h4>
 
-        <div className='text-sm mb-5 text-gray-400 text-center'>
+        <div className='text-sm mb-5 text-gray-500 text-center'>
           Hover over name of the programming language, technology, library or
           software to get more information
         </div>

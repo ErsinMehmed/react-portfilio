@@ -10,7 +10,7 @@ const ProfileCard = () => {
     <div className='lg:w-[350px] xl:w-[480px] lg:block'>
       <div className='w-full mb-6 lg:mb-0 mx-auto relative bg-white text-center px-6 lg:rounded-[20px] mt-40 sm:mt-44 md:mt-56 lg:mt-0 shadow'>
         <img
-          src={"images/profile.jpg"}
+          src={"images/profile.png"}
           className='w-56 h-56 sm:w-60 sm:h-60 absolute left-[50%] transform -translate-x-[50%] drop-shadow-xl mx-auto rounded-[20px] -mt-[140px]'
           alt='profile'
         />
@@ -20,7 +20,7 @@ const ProfileCard = () => {
             Ersin Hyusein
           </h2>
 
-          <h3 className='mb-4 text-[#7B7B7B] inline-block px-5 py-1.5 rounded-lg'>
+          <h3 className='mb-4 text-gray-600 inline-block px-5 py-1.5 rounded-lg'>
             Backend Web Developer
           </h3>
 
@@ -57,7 +57,7 @@ const ProfileCard = () => {
                 </span>
 
                 <div className='text-left ml-2.5 font-semibold text-slate-800'>
-                  <p className='text-sm text-slate-500'>{item.title}</p>
+                  <p className='text-sm text-slate-600'>{item.title}</p>
 
                   {index === 2 || index === 3 ? (
                     <a
