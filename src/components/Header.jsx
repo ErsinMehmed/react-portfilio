@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import data from "../Data";
+import { headerLinks } from "../Data";
 
 const Header = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const currentRoute = data.headerLinks.find(
+    const currentRoute = headerLinks.find(
       (item) => item.href === location.pathname
     );
 
@@ -19,7 +19,7 @@ const Header = () => {
     <header className='w-fit h-fit hidden lg:block p-4 mb-8 rounded-2xl bg-white shadow'>
       <nav className='hidden lg:block'>
         <ul className='flex'>
-          {data.headerLinks.map((item) => (
+          {headerLinks.map((item) => (
             <li key={item.href}>
               <Link
                 className={`${

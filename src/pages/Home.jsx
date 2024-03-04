@@ -1,5 +1,5 @@
 import Layout from "../components/Layout";
-import data from "../Data";
+import { mainSkills } from "../Data";
 
 const Home = () => {
   return (
@@ -9,8 +9,8 @@ const Home = () => {
       <div className='pt-5 w-full space-y-2.5 pr-10'>
         <p className='text-[#44566c] leading-7'>
           Hi, my name is Ersin and I am a software developer and sports coach. I
-          have been programming for 3 1/2 years, both at university and in my
-          spare time, and soon also at work.
+          have been programming for 5, both at university and in my spare time,
+          and soon also at work.
         </p>
 
         <p className='text-[#44566c] leading-7'>
@@ -26,7 +26,7 @@ const Home = () => {
       </h3>
 
       <div className='grid gap-7 grid-cols-1 md:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2'>
-        {data.mainSkills.map((item, index) => (
+        {mainSkills.map((item, index) => (
           <div
             key={index}
             className={`flex ${item.color} gap-4 rounded-xl p-6`}>

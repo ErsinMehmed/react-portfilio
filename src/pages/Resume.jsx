@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import React, { useState } from "react";
 import IconAcademicCap from "../icons/AcademicCap";
 import Layout from "../components/Layout";
 import SkillBox from "../components/Resume/SkillBox";
 import EducationBox from "../components/Resume/EducationBox";
 import ExperienceBox from "../components/Resume/ExperienceBox";
 import IconWork from "../icons/Work";
-import data from "../Data";
+import { techSkills, educations, experiences } from "../Data";
 import "./../App.css";
 
 const filterNames = ["All", "Frontend", "Backend", "Database", "Other"];
@@ -19,19 +18,11 @@ const motionProps = {
 
 const Resume = () => {
   const [selectedKind, setSelectedKind] = useState("All");
-  const [viewed, setViewed] = useState({});
-
-  const skillRef = useRef(null);
-  const isInView = useInView(skillRef);
-
-  useEffect(() => {
-    setViewed(isInView);
-  }, [isInView]);
 
   const filteredSkills =
     selectedKind !== "All"
-      ? data.techSkills.filter((item) => item.kind === selectedKind)
-      : data.techSkills;
+      ? techSkills.filter((item) => item.kind === selectedKind)
+      : techSkills;
 
   return (
     <Layout
@@ -46,7 +37,7 @@ const Resume = () => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-x-5'>
-          {data.educations.map((item, index) => (
+          {educations.map((item, index) => (
             <EducationBox
               key={index}
               item={item}
@@ -64,7 +55,7 @@ const Resume = () => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-x-5'>
-          {data.experiences.map((item, index) => (
+          {experiences.map((item, index) => (
             <ExperienceBox
               key={index}
               item={item}
@@ -75,10 +66,7 @@ const Resume = () => {
         </div>
       </div>
 
-      <motion.div
-        ref={skillRef}
-        className='px-6 md:px-10 lg:px-14'
-        {...motionProps}>
+      <div className='px-6 md:px-10 lg:px-14'>
         <h4 className='text-xl sm:text-2xl text-slate-700 font-semibold mb-0.5 text-center'>
           Professional Skills
         </h4>
@@ -109,11 +97,10 @@ const Resume = () => {
               key={index}
               item={item}
               index={index}
-              viewed={viewed}
             />
           ))}
         </div>
-      </motion.div>
+      </div>
     </Layout>
   );
 };

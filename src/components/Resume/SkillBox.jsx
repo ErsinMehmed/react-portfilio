@@ -6,17 +6,16 @@ const SkillBox = (props) => {
   return (
     <motion.div
       className='mb-5'
-      initial={props.viewed ? { opacity: 0, y: 20 } : {}}
-      animate={props.viewed ? { opacity: 1, y: 0 } : {}}
-      transition={
-        props.viewed ? { duration: 0.5, delay: props.index * 0.06 } : {}
-      }>
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: props.index * 0.06 }}>
       <div className='flex justify-between mb-1 font-semibold text-[#526377]'>
         {props.item.description ? (
           <Tooltip
             content={props.item.description}
-            style={{ style: "light" }}
-            placement='right'>
+            placement='right'
+            style='light'
+            arrow={false}>
             <span className='hover:opacity-70 transition-All cursor-pointer'>
               {props.item.title}
             </span>

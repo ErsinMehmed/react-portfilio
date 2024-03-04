@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 
 const Certification = () => {
-  return <Layout>ersin</Layout>;
+  return <Layout></Layout>;
 };
 
 export default Certification;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import data from "../Data";
+import { headerLinks } from "../Data";
 
 const MobileMenu = () => {
   const location = useLocation();
@@ -8,7 +8,7 @@ const MobileMenu = () => {
   return (
     <div className='lg:hidden fixed z-50 w-full h-14 max-w-sm sm:max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-3.5 left-1/2'>
       <div className='grid h-full max-w-lg grid-cols-4 mx-auto'>
-        {data.headerLinks.map((item, index) => (
+        {headerLinks.map((item, index) => (
           <Link
             key={item.href}
             type='button'

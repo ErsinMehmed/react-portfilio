@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 
 const Project = () => {
-  return <Layout>Mehmed</Layout>;
+  return <Layout></Layout>;
 };
 
 export default Project;

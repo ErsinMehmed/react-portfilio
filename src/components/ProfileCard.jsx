@@ -1,5 +1,5 @@
 import IconDownload from "../icons/Download";
-import data from "../Data";
+import { socialLinks, personalInfo } from "../Data";
 
 const ProfileCard = () => {
   const handleDownload = () => {
@@ -21,11 +21,11 @@ const ProfileCard = () => {
           </h2>
 
           <h3 className='mb-4 text-gray-600 inline-block px-5 py-1.5 rounded-lg'>
-            Backend Web Developer
+            Web Developer
           </h3>
 
           <div className='flex justify-center space-x-3'>
-            {data.socialLinks.map((link, index) => {
+            {socialLinks.map((link, index) => {
               const IconComponent = link.icon;
 
               return (
@@ -43,11 +43,11 @@ const ProfileCard = () => {
           </div>
 
           <div className='px-7 py-6 rounded-2xl mt-7 bg-[#F3F6F6]'>
-            {data.personalInfo.map((item, index) => (
+            {personalInfo.map((item, index) => (
               <div
                 key={index}
                 className={`flex ${
-                  index === data.personalInfo.length - 1
+                  index === personalInfo.length - 1
                     ? ""
                     : "border-b border-gray-200"
                 } py-2.5`}>
