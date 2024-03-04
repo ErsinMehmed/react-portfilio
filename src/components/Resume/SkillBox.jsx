@@ -14,7 +14,6 @@ const SkillBox = (props) => {
           <Tooltip
             content={props.item.description}
             placement='right'
-            style='light'
             arrow={false}>
             <span className='hover:opacity-70 transition-All cursor-pointer'>
               {props.item.title}
