@@ -306,14 +306,14 @@ const techSkills = [
   {
     title: ".NET",
     kind: "Backend",
-    percentage: "60",
+    percentage: "50",
     description: "Having a good command of .NET, my level is advanced.",
     color: "bg-yellow-400",
   },
   {
     title: "ASP.NET",
     kind: "Backend",
-    percentage: "60",
+    percentage: "40",
     description: "I am good at ASP.NET. My level is advanced.",
     color: "bg-amber-400",
   },

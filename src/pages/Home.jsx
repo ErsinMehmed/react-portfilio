@@ -10,7 +10,7 @@ const Home = () => {
         <p className='text-[#44566c] leading-7'>
           Hi, my name is Ersin and I am a software developer and sports coach. I
           have been programming for 5, both at university and in my spare time,
-          and soon also at work.
+          and also at work.
         </p>
 
         <p className='text-[#44566c] leading-7'>
