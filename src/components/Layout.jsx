@@ -28,7 +28,7 @@ const Layout = (props) => {
 
   return (
     <div className='w-full min-h-screen bg-blue-300 pb-12 lg:pb-8 bg-gradient-to-r from-purple-100 via-pink-50 to-pink-100'>
-      <div className='flex flex-col items-center justify-center'>
+      <div className='flex flex-col min-h-screen items-center justify-center'>
         <div className='max-w-[2000px] lg:px-4 xl:px-32 2xl:px-64 lg:flex gap-10 pt-0.5 lg:pt-40'>
           <ProfileCard />
 
