@@ -119,7 +119,7 @@ const experiences = [
     title: "Backend web developer",
     period: "08.2023 - Present",
     location: "Varna",
-    company: "MyPos Technologies",
+    company: "MyPOS Technologies",
     color: "bg-[#fcf4ff]",
   },
   {
@@ -137,7 +137,7 @@ const experiences = [
     color: "bg-[#f2f4ff]",
   },
   {
-    title: "Manager in a smAll company",
+    title: "Manager in a small company",
     period: "04.2021 - 10.2021",
     location: "Varna",
     company: "Briella Ltd",
