@@ -7,8 +7,8 @@ const ProfileCard = () => {
   };
 
   return (
-    <div className='lg:w-[350px] xl:w-[480px] lg:block'>
-      <div className='w-full mb-6 lg:mb-0 mx-auto relative bg-white text-center px-6 lg:rounded-[20px] mt-40 sm:mt-44 md:mt-56 lg:mt-0 shadow'>
+    <div className='lg:sticky top-44'>
+      <div className='w-full mb-6 lg:mb-0 mx-auto relative bg-white text-center px-8 lg:rounded-[20px] mt-40 sm:mt-44 md:mt-56 lg:mt-0 shadow'>
         <img
           src={"images/profile.png"}
           className='w-56 h-56 sm:w-60 sm:h-60 absolute left-[50%] transform -translate-x-[50%] drop-shadow-xl mx-auto rounded-[20px] -mt-[140px]'
@@ -42,7 +42,7 @@ const ProfileCard = () => {
             })}
           </div>
 
-          <div className='px-7 py-6 rounded-2xl mt-7 bg-[#F3F6F6]'>
+          <div className='p-6 rounded-2xl mt-7 bg-[#F3F6F6]'>
             {personalInfo.map((item, index) => (
               <div
                 key={index}
