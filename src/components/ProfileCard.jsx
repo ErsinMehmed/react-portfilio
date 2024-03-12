@@ -34,7 +34,7 @@ const ProfileCard = () => {
                   href={link.href}
                   target='_blank'
                   rel='noreferrer'>
-                  <span className='w-10 h-10 flex items-center group justify-center rounded-lg bg-[#f3f6f6] hover:bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0] text-[#1773EA]'>
+                  <span className='w-10 h-10 flex items-center group justify-center rounded-lg bg-[#f3f6f6] hover:bg-[#1b74e4] text-[#1773EA]'>
                     <IconComponent />
                   </span>
                 </a>
