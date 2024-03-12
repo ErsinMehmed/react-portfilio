@@ -27,13 +27,13 @@ const headerLinks = [
     icon: IconDocument,
   },
   {
-    title: "Project",
-    href: "/project",
+    title: "Projects",
+    href: "/projects",
     icon: IconRocket,
   },
   {
-    title: "Certification",
-    href: "/certification",
+    title: "Certifications",
+    href: "/certifications",
     icon: IconStar,
   },
 ];
@@ -380,6 +380,93 @@ const techSkills = [
   },
 ];
 
+const projects = {
+  professional: [
+    {
+      name: "Web-based system for managing business processes related to payments.",
+      technologies: [
+        "HTML",
+        "Twig",
+        "CSS",
+        "Bootstrap",
+        "JavaScript",
+        "jQuery",
+        "React.js",
+        "Mobx",
+        "PHP",
+        "Symfony",
+        "MySQL",
+      ],
+      description:
+        "This project consists of two components: a website and a user account system. Users can manage all processes related to payments received from their terminals through the account section, along with additional functionalities such as creating online stores with various products, issuing invoices to their clients through an innovative interface, and tracking all incoming funds in their account.",
+    },
+    {
+      name: "Web-based system for buying and selling cars.",
+      technologies: [
+        "HTML",
+        "CSS",
+        "Tailwind",
+        "JavaScript",
+        "Vue.js",
+        "Inertia.js",
+        "PHP",
+        "Laravel",
+        "MySQL",
+      ],
+      description:
+        "web-based platform designed to facilitate the process of buying and selling cars. It allows users to browse listings, post their vehicles for sale, and conduct secure transactions through the platform.",
+    },
+    {
+      name: "Web based system for property valuation",
+      technologies: [
+        "HTML",
+        "CSS",
+        "Tailwind",
+        "JavaScript",
+        "Vue.js",
+        "Inertia.js",
+        "PHP",
+        "Laravel",
+        "MySQL",
+      ],
+      description:
+        "The purpose of the trial is to allow residents to create appraisals that will be predicted by all interested parties and select the most appropriate appraiser to perform the task on the property. The selection of an evaluator is done anonymously, through a dynamic interface. The appraisal process begins with creating an appraisal, linking interested pages, inserting property data, and displaying appraisers through the interface. Once the appraiser is selected and the appraisals paid for, the process is complete. All communication about the process is done automatically through the platform, and the communication is visible to users. The platform supports multiple languages.",
+    },
+  ],
+  personal: [
+    {
+      name: "Web based management system",
+      technologies: [
+        "HTML",
+        "CSS",
+        "Tailwind",
+        "Framer Motion",
+        "React.js",
+        "Mobx",
+        "Next.js",
+        "MongoDB",
+      ],
+      description:
+        "The Web-based management system is a comprehensive platform that allows users to place orders, monitor product availability, and manage their inventory effectively. Users can specify unique properties for each product, such as images, prices and etc. Additionally, the system includes features for adding sales and provides an innovative dashboard for tracking various statistics related to sales, turnovers, profits, expenses, and product inventory through insightful diagrams.",
+    },
+    {
+      name: "System for job searching and offering - Job Portal",
+      technologies: [
+        "HTML",
+        "CSS",
+        "Tailwind",
+        "Framer Motion",
+        "React.js",
+        "Mobx",
+        "Next.js",
+        "MongoDB",
+      ],
+      description:
+        "The platform designed to connect employers with job seekers, providing functionalities for job searching and offering. Users can create accounts, distinguishing between employers and job seekers, to access the platform's features. Job seekers can browse through job listings, filtering by criteria such as location, salary, and industry, while employers can post job openings, specifying requirements and offered salary. The platform facilitates online job applications, allowing job seekers to submit their CVs and cover letters directly. Additionally, it may incorporate messaging features for communication between employers and job seekers and include a rating and review system for users to evaluate each other's experiences.",
+    },
+  ],
+};
+
 export {
   headerLinks,
   socialLinks,
@@ -388,4 +475,5 @@ export {
   experiences,
   mainSkills,
   techSkills,
+  projects,
 };

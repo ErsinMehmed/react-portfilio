@@ -58,7 +58,7 @@ const Layout = (props) => {
 
         {showScrollButton && (
           <button
-            className='hidden lg:flex w-10 h-10 fixed z-20 right-4 bottom-4 bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0] hover:from-[#ffc3a0] hover:to-[#ffafbd] rounded-full justify-center items-center hover:opacity-80 transition-all duration-500 text-white'
+            className='hidden lg:flex w-10 h-10 fixed z-20 right-4 bottom-4 bg-[#1b74e4] hover:opacity-80 rounded-full justify-center items-center transition-all text-white'
             onClick={scrollToTop}>
             <ChevronUp className='w-7 h-7' />
           </button>

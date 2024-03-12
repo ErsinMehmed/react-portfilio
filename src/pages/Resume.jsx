@@ -83,8 +83,8 @@ const Resume = () => {
                 key={index}
                 className={`${
                   selectedKind === item
-                    ? "text-[#fa5252]"
-                    : "text-slate-700 hover:text-[#fa5252]"
+                    ? "text-[#1b74e4]"
+                    : "text-slate-700 hover:text-[#1b74e4]"
                 } cursor-pointer font-semibold text-base`}
                 onClick={() => setSelectedKind(item)}>
                 {item}
@@ -92,12 +92,13 @@ const Resume = () => {
             ))}
           </div>
 
-          <div ref={ref} className='grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-10'>
+          <div
+            ref={ref}
+            className='grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-10'>
             {filteredSkills.map((item, index) => (
               <InViewAnimation
                 key={index}
-                delay={index <= 12 ? index * 0.1 : index * 0.08}
-               >
+                delay={index <= 12 ? index * 0.1 : index * 0.08}>
                 <SkillBox
                   item={item}
                   index={index}
