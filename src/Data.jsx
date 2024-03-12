@@ -103,14 +103,14 @@ const educations = [
     period: "09.2018 - 06.2022",
     degree: "Business Information System",
     institution: "University of Economics Varna",
-    color: "bg-[#fff1fb]",
+    color: "bg-[#eef5fa]",
   },
   {
     title: "High School",
     period: "09.2013 - 05.2018",
     degree: "Sport Coach",
     institution: `Sport School "Georgi Benkovski" Varna`,
-    color: "bg-[#fff4f4]",
+    color: "bg-[#eef5fa]",
   },
 ];
 
@@ -120,7 +120,7 @@ const experiences = [
     period: "08.2023 - Present",
     location: "Varna",
     company: "MyPOS Technologies",
-    color: "bg-[#fcf4ff]",
+    color: "bg-[#fff4f4]",
   },
   {
     title: "Full stack web developer",
@@ -134,28 +134,28 @@ const experiences = [
     period: "04.2022 - 09.2022",
     location: "Varna",
     company: "ENERGO PRO",
-    color: "bg-[#f2f4ff]",
+    color: "bg-[#eef5fa]",
   },
   {
     title: "Manager in a small company",
     period: "04.2021 - 10.2021",
     location: "Varna",
     company: "Briella Ltd",
-    color: "bg-[#eef5fa]",
+    color: "bg-[#fff4f4]",
   },
   {
     title: "Currency cashier",
     period: "04.2019 - 09.2019",
     location: "Golden Sands",
     company: "Edives Ltd",
-    color: "bg-[#f3faff]",
+    color: "bg-[#fff4f4]",
   },
   {
     title: "Tourism",
     period: "04.2018 - 09.2018",
     location: "Golden Sands",
     company: "Tourism",
-    color: "bg-[#fcf4ff]",
+    color: "bg-[#eef5fa]",
   },
 ];
 
@@ -164,25 +164,25 @@ const mainSkills = [
     title: "Design",
     text: "I specialize in creating visually captivating and user-friendly designs that leave a lasting impression. Each design is meticulously crafted to align with every brand identity and meet specific goals.",
     icon: IconUIdesign,
-    color: "bg-[#fcf4ff]",
+    color: "bg-[#fff4f4]",
   },
   {
     title: "App Development",
     text: "With a passion for innovation and a keen eye for every detail, I specialize in creating exceptional applications that captivate. Through a collaborative and client-focused approach.",
     icon: IconAppDev,
-    color: "bg-[#fefaf0]",
+    color: "bg-[#eef5fa]",
   },
   {
     title: "Management",
     text: "As an innovator, I bring a strategic mindset and hands-on approach to every project. I have experience leading small initiatives, ensuring seamless coordination and alignment with organizational goals.",
     icon: IconManagement,
-    color: "bg-[#fff0f8]",
+    color: "bg-[#eef5fa]",
   },
   {
     title: "Web Development",
     text: "In today's, a strong online presence is essential businesses. As a developer, I specialize in creating user-centric web apps/systems/websites that not only attract attention but also deliver exceptional functionality.",
     icon: IconWebDev,
-    color: "bg-[#f3faff]",
+    color: "bg-[#fff4f4]",
   },
 ];
 

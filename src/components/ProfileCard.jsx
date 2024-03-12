@@ -79,7 +79,7 @@ const ProfileCard = () => {
 
           <button
             type='button'
-            className='mx-auto flex items-center sm:text-xl font-semibold rounded-3xl mt-5 sm:mt-6 bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0] hover:from-[#ffc3a0] hover:to-[#ffafbd] px-8 sm:px-10 py-2 sm:py-3 text-white active:scale-95 transition-all'
+            className='mx-auto flex items-center sm:text-xl font-semibold rounded-3xl mt-5 sm:mt-6 bg-[#1b74e4] hover:bg-[#65a4f1] px-8 sm:px-10 py-2 sm:py-3 text-white active:scale-95 transition-all'
             onClick={handleDownload}>
             <IconDownload className='w-6 h-6 mr-2 mt-0.5 sm:mt-1' />
             Download CV

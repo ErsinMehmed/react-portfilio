@@ -29,7 +29,7 @@ const Resume = () => {
       <div className='mt-8 mb-10 2xl:mb-12'>
         <InViewAnimation>
           <div className='flex items-center space-x-2 mb-4'>
-            <IconAcademicCap className='w-6 h-6 sm:w-7 sm:h-7 text-[#F95054]' />
+            <IconAcademicCap className='w-6 h-6 sm:w-7 sm:h-7 text-[#1b74e4]' />
             <h4 className='text-xl sm:text-2xl text-slate-700 font-semibold'>
               Education
             </h4>
@@ -48,7 +48,7 @@ const Resume = () => {
 
         <InViewAnimation>
           <div className='flex items-center space-x-2 my-4'>
-            <IconWork className='w-6 h-6 sm:w-7 sm:h-7 text-[#F95054]' />
+            <IconWork className='w-6 h-6 sm:w-7 sm:h-7 text-[#1b74e4]' />
             <h4 className='text-xl sm:text-2xl text-slate-700 font-semibold'>
               Experience
             </h4>

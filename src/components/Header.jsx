@@ -24,8 +24,8 @@ const Header = () => {
               <Link
                 className={`${
                   location.pathname === item.href
-                    ? "text-white bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0]"
-                    : "text-slate-700 hover:text-white hover:bg-gradient-to-r from-[#ffafbd] to-[#ffc3a0] transition-all bg-[#f3f6f6]"
+                    ? "text-white bg-[#1b74e4]"
+                    : "text-slate-700 hover:text-white hover:bg-[#1b74e4] transition-all bg-[#f3f6f6]"
                 } w-[85px] h-[85px] flex items-center justify-center mx-2.5 rounded-lg text-[13px] font-semibold shadow`}
                 to={item.href}>
                 <div className='text-center'>

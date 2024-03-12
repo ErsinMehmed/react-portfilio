@@ -27,7 +27,7 @@ const Layout = (props) => {
   };
 
   return (
-    <div className='w-full min-h-screen bg-blue-300 pb-12 lg:pb-8 bg-gradient-to-r from-purple-100 via-pink-50 to-pink-100'>
+    <div className='w-full min-h-screen pb-12 lg:pb-8 bg-gradient-to-r from-sky-100 via-blue-50 to-indigo-100'>
       <div className='h-full flex flex-col min-h-screen items-center justify-center'>
         <div className='relative h-full max-w-[2000px] lg:px-4 xl:px-32 2xl:px-64 lg:flex gap-10 pt-0.5 lg:pt-40'>
           <span className='w-fit lg:w-[350px] xl:w-[480px] lg:block'>
@@ -47,7 +47,7 @@ const Layout = (props) => {
               transition={{ duration: 0.6 }}>
               <h2 className='font-bold text-3xl sm:text-4xl text-slate-700 flex items-center'>
                 {props.header}
-                <div className='h-0.5 w-32 sm:w-44 ml-8 bg-gradient-to-r from-[#FA5252] to-[#DD2476] mt-1.5 rounded' />
+                <div className='h-0.5 w-32 sm:w-44 ml-8 bg-[#1b74e4] mt-1.5 rounded' />
               </h2>
 
               {props.children}
