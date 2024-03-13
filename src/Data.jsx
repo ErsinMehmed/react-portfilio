@@ -464,8 +464,125 @@ const projects = {
       description:
         "The platform designed to connect employers with job seekers, providing functionalities for job searching and offering. Users can create accounts, distinguishing between employers and job seekers, to access the platform's features. Job seekers can browse through job listings, filtering by criteria such as location, salary, and industry, while employers can post job openings, specifying requirements and offered salary. The platform facilitates online job applications, allowing job seekers to submit their CVs and cover letters directly. Additionally, it may incorporate messaging features for communication between employers and job seekers and include a rating and review system for users to evaluate each other's experiences.",
     },
+    {
+      name: "Appointment system",
+      technologies: [
+        "HTML",
+        "CSS",
+        "Bootstrap",
+        "React.js",
+        "Mobx",
+        "PHP",
+        "Symfony",
+        "MySQL",
+      ],
+      description:
+        "The Appointment System is a web-based application designed to facilitate the scheduling and management of appointments and meetings. Users can effortlessly add appointments, while also being able to filter through the data based on various criteria. With its intuitive interface and robust backend, the system ensures efficient organization and coordination of schedules for individuals or teams.",
+    },
+    {
+      name: "Laravel Blog",
+      technologies: ["HTML", "CSS", "Bootstrap", "PHP", "Laravel", "MySQL"],
+      description:
+        "The Laravel Blog project is a dynamic web application built using HTML, CSS, Bootstrap, PHP, Laravel, and MySQL. It serves as a versatile platform for creating, updating, reading, and deleting (CRUD) blog posts, providing users with the ability to manage their content seamlessly. Additionally, the system supports user profiles, allowing individuals to create and personalize their accounts. Through its intuitive interface and robust backend powered by Laravel, users can easily compose, edit, and publish blog posts while maintaining full control over their profiles. With features for both content creation and user management, the blog offers a comprehensive solution for blogging enthusiasts and content creators alike.",
+    },
+    {
+      name: "Work flow management system",
+      technologies: [
+        "HTML",
+        "CSS",
+        "Tailwind",
+        "JavaScript",
+        "jQuery",
+        "AJAX",
+        "PHP",
+        "MySQL",
+      ],
+      description:
+        "Web-based workflow management system. I have envisioned a site from where every user will be able to make a request/order for the type of service. An administrator will then process their order, via an admin panel/window where a task will begin for a specific team. Employees from the team will access the tasks from a mobile device (tablet).",
+    },
+    {
+      name: "Web platform for price comparing and products",
+      technologies: [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "jQuery",
+        "AJAX",
+        "PHP",
+        "MySQL",
+      ],
+      description:
+        "Web platform for comparing prices and products from various sites. With the development of e-commerce, the online space is crowded with a lot of information. There comes the need for such platforms for comparing products and services. The idea is for consumers to easily make their choice when purchasing a product. ",
+    },
+    {
+      name: "System for work process management",
+      technologies: ["C#", "SQL"],
+      description:
+        "The system allows users after logging into the system and many functional options. The main functionalities are: adding new products and employees, screen with employees and products, editing employees and products, exporting data from the system.",
+    },
+    {
+      name: "System for work process management in a pizzeria",
+      technologies: ["Java", "SQL", "SQLite"],
+      description:
+        "The system allows users, after logging into the system, many functional options. The main functionalities are: adding new products according to different criteria, viewing products and filtering according to different criteria, entering stocks, reporting used products.",
+    },
   ],
 };
+
+const certifications = [
+  {
+    kind: "Award",
+    image: "uni_logo.png",
+    description:
+      "The recipient of the CRAICT Award at UE Varna in 2023, honored as a Laureate, signifies an individual recognized for talent and achievements. This award, part of a fund supporting talented students, highlights their outstanding contributions and dedication to their field of study or area of expertise within the university community.",
+  },
+  {
+    kind: "Certificatе",
+    image: "uni_logo.png",
+    description: `Certificate for first place in 2022, "Review of student activities" at the Department of Informatics with development (Platform for comparison of prices and products from various websites).`,
+  },
+  {
+    kind: "Certificatе",
+    image: "mon-logo.png",
+    description:
+      "Computer Literacy Certificate. Released in 2018. The certificate covers an MS Office suite and work with the Internet and applications.",
+  },
+  {
+    kind: "Sport achievements",
+    image: "handball.png",
+    description:
+      "One time sportsman of the year at Varna sports school 2017. 5 times team of the year. 3rd place at the European handball championship. Many individual awards and medals from state finals.",
+  },
+  {
+    kindEn: "Course",
+    image: "uni_logo.png",
+    description:
+      "Part of the IT Master Class 9. The university provides us to become a part of the companies in the IT field and gain some of their experience. ",
+  },
+  {
+    kindEn: "Course",
+    image: "uni_logo.png",
+    description:
+      "Part of the IT Master Class 10. The university provides us to become a part of the companies in the IT field and gain some of their experience. ",
+  },
+  {
+    kindEn: "Scientific publication",
+    image: "uni_logo.png",
+    description: `Report in the collection "STUDENT SCIENTIFIC CONFERENCE" on the topic "Development of web platforms", Publishing House "Science and Economics" University of Economics - Varna 2022.`,
+  },
+  {
+    kind: "Certificatе",
+    image: "Microsoft_Azure.svg.png",
+    description:
+      "Certificate of successfully completed course on Microsoft Azure Cloud (fundamental). The course includes working with Databricks, Data Factory, Key Vault, Containers.",
+  },
+  {
+    kind: "Certificatе",
+    image: "SAFe-cert.png",
+    description:
+      "Certificate of successfully completed course on Scaled Agile (SAFe methodology). The course topics includes Benefits of SAFe, SAFe Principles, SAFe and Agile, Why SAFe.",
+  },
+];
 
 export {
   headerLinks,
@@ -476,4 +593,5 @@ export {
   mainSkills,
   techSkills,
   projects,
+  certifications,
 };
