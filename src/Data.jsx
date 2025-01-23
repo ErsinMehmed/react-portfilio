@@ -95,21 +95,21 @@ const educations = [
     title: "Master",
     period: "02.2023 - 06.2024",
     degree: "Mobile and Web Technologies",
-    institution: "University of Economics Varna",
+    institution: "University of Economics - Varna",
     color: "bg-[#fff4f4]",
   },
   {
     title: "Bachelor",
     period: "09.2018 - 06.2022",
     degree: "Business Information System",
-    institution: "University of Economics Varna",
+    institution: "University of Economics - Varna",
     color: "bg-[#eef5fa]",
   },
   {
     title: "High School",
     period: "09.2013 - 05.2018",
     degree: "Sport Coach",
-    institution: `Sport School "Georgi Benkovski" Varna`,
+    institution: `Sport School "Georgi Benkovski" - Varna`,
     color: "bg-[#eef5fa]",
   },
 ];
@@ -192,14 +192,14 @@ const techSkills = [
     percentage: "100",
     kind: "Frontend",
     description:
-      "I am proficient in HTML and have utilized it extensively across numerous projects.",
+      "I have advanced expertise in HTML and have utilized it extensively in a wide range of projects.",
     color: "bg-red-400",
   },
   {
     title: "CSS",
     kind: "Frontend",
     description:
-      "I am excellent at CSS. I have used CSS in many projects. I am skilled in using grid and flexbox for positioning elements, and I also use CSS for animating elements.",
+      "I am highly skilled in CSS and have implemented it across numerous projects. My strengths include using grid and flexbox for layout positioning, as well as creating engaging animations.",
     percentage: "90",
     color: "bg-rose-400",
   },
@@ -207,7 +207,7 @@ const techSkills = [
     title: "Tailwind",
     kind: "Frontend",
     description:
-      "I am excellent at Tailwind. I have used Tailwind in many projects.",
+      "I have extensive experience with Tailwind CSS and have used it in many professional projects for rapid UI development.",
     percentage: "90",
     color: "bg-pink-400",
   },
@@ -215,7 +215,7 @@ const techSkills = [
     title: "Bootstrap",
     kind: "Frontend",
     description:
-      "I am proficient in Bootstrap, having utilized it in one project.",
+      "I am proficient in Bootstrap and have applied it effectively in project development, especially for responsive designs.",
     percentage: "70",
     color: "bg-fuchsia-400",
   },
@@ -223,7 +223,7 @@ const techSkills = [
     title: "JavaScript",
     kind: "Frontend",
     description:
-      "I am proficient in JavaScript. I have used JavaScript in many of my projects. I use JS for animations, form validations, showing and hiding elements, and more.",
+      "I am highly proficient in JavaScript and have utilized it for various functionalities, including animations, form validations, and dynamic UI interactions.",
     percentage: "90",
     color: "bg-purple-400",
   },
@@ -232,7 +232,7 @@ const techSkills = [
     kind: "Frontend",
     percentage: "70",
     description:
-      "I am proficient in Vue.js. I have used it in one of my professional projects.",
+      "I have strong proficiency in Vue.js, having used it in one of my professional projects to build robust front-end applications.",
     color: "bg-violet-400",
   },
   {
@@ -240,7 +240,7 @@ const techSkills = [
     kind: "Frontend",
     percentage: "50",
     description:
-      "My familiarity with Inertia.js stands at an intermediate level.",
+      "I have intermediate-level experience with Inertia.js, utilizing it to bridge the gap between front-end and back-end frameworks.",
     color: "bg-indigo-400",
   },
   {
@@ -248,13 +248,14 @@ const techSkills = [
     kind: "Frontend",
     percentage: "80",
     description:
-      "I possess a strong grasp of React.js and have utilized it proficiently.",
+      "I possess a solid understanding of React.js, having used it to develop scalable and efficient front-end applications.",
     color: "bg-blue-400",
   },
   {
     title: "Mobx",
     kind: "Frontend",
     percentage: "90",
+    description: "I have extensive experience with MobX, leveraging it for efficient state management in React applications.",
     color: "bg-sky-400",
   },
   {
@@ -262,7 +263,7 @@ const techSkills = [
     kind: "Frontend",
     percentage: "80",
     description:
-      "I am proficient in jQuery. I have used jQuery in many of my projects. I use the library for real-time element manipulation without the need for button clicks.",
+      "I am proficient in jQuery and have used it for real-time DOM manipulation and seamless UI interactions in multiple projects.",
     color: "bg-cyan-400",
   },
   {
@@ -270,7 +271,7 @@ const techSkills = [
     kind: "Frontend",
     percentage: "85",
     description:
-      "I have been using AJAX for some time now. I have used AJAX in two projects. I use the technology for dynamically retrieving and saving data from the Database.",
+      "I have solid experience with AJAX and have used it in projects to dynamically retrieve and save data from databases.",
     color: "bg-teal-400",
   },
   {
@@ -278,43 +279,43 @@ const techSkills = [
     kind: "Backend",
     percentage: "85",
     description:
-      "I am very proficient in PHP. I have used PHP for data retrieval, CRUD operations, functionalities, and more.",
+      "I am highly proficient in PHP, using it for data retrieval, CRUD operations, and developing back-end functionalities.",
     color: "bg-emerald-400",
   },
   {
     title: "Symfony",
     kind: "Backend",
     percentage: "80",
-    description: "My proficiency in Symfony is at an intermediate level.",
+    description: "I have intermediate expertise in Symfony, building structured and efficient back-end applications.",
     color: "bg-green-400",
   },
   {
     title: "Laravel",
     kind: "Backend",
-    percentage: "80",
-    description: "I develop projects at work using Laravel.",
+    percentage: "70",
+    description: "I use Laravel extensively in my professional work for building scalable back-end systems.",
     color: "bg-lime-400",
   },
   {
     title: "Next.js",
     kind: "Backend",
-    percentage: "70",
+    percentage: "60",
     description:
-      "I develop projects using Next.js extensively as part of my professional work.",
+      "I have significant experience with Next.js, utilizing it for server-side rendering and building modern web applications.",
     color: "bg-lime-300",
   },
   {
     title: ".NET",
     kind: "Backend",
-    percentage: "50",
-    description: "Having a good command of .NET, my level is advanced.",
+    percentage: "40",
+    description: "I have a good command of .NET, with advanced knowledge and practical experience in building back-end applications.",
     color: "bg-yellow-400",
   },
   {
     title: "ASP.NET",
     kind: "Backend",
     percentage: "40",
-    description: "I am good at ASP.NET. My level is advanced.",
+    description: "I am experienced with ASP.NET, having an advanced understanding of its use in building web applications.",
     color: "bg-amber-400",
   },
   {
@@ -322,7 +323,7 @@ const techSkills = [
     kind: "Database",
     percentage: "80",
     description:
-      "I am fluent in MySQL. I have used MySQL in several projects. I am well versed in CRUD operations.",
+      "I am highly skilled in MySQL, with expertise in CRUD operations and optimizing database queries.",
     color: "bg-red-400",
   },
   {
@@ -330,7 +331,7 @@ const techSkills = [
     kind: "Database",
     percentage: "70",
     description:
-      "I am fluent in SQL. I have used SQL in several projects. I am well versed in CRUD operations.",
+      "I am proficient in SQL, having used it extensively for database operations and data analysis.",
     color: "bg-pink-400",
   },
   {
@@ -338,25 +339,21 @@ const techSkills = [
     kind: "Database",
     percentage: "70",
     description:
-      "Fluent in MongoDB, I proficiently utilize it for database operations, excelling in CRUD functionalities.",
+      "I have strong proficiency in MongoDB, utilizing it for dynamic database operations and complex queries.",
     color: "bg-pink-400",
   },
   {
     title: "GitHub",
     kind: "Other",
     percentage: "80",
-    color: "bg-rose-400",
-  },
-  {
-    title: "SVN",
-    kind: "Other",
-    percentage: "80",
+    description: "I have extensive experience with GitHub for version control and collaboration in development projects.",
     color: "bg-rose-400",
   },
   {
     title: "Jira",
     kind: "Other",
     percentage: "90",
+    description: "I am highly skilled in Jira, using it for agile project management and issue tracking.",
     color: "bg-rose-400",
   },
 ];
