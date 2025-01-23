@@ -268,7 +268,7 @@ const techSkills = [
   {
     title: "AJAX",
     kind: "Frontend",
-    percentage: "80",
+    percentage: "85",
     description:
       "I have been using AJAX for some time now. I have used AJAX in two projects. I use the technology for dynamically retrieving and saving data from the Database.",
     color: "bg-teal-400",
@@ -276,7 +276,7 @@ const techSkills = [
   {
     title: "PHP",
     kind: "Backend",
-    percentage: "80",
+    percentage: "85",
     description:
       "I am very proficient in PHP. I have used PHP for data retrieval, CRUD operations, functionalities, and more.",
     color: "bg-emerald-400",
@@ -284,14 +284,14 @@ const techSkills = [
   {
     title: "Symfony",
     kind: "Backend",
-    percentage: "70",
+    percentage: "80",
     description: "My proficiency in Symfony is at an intermediate level.",
     color: "bg-green-400",
   },
   {
     title: "Laravel",
     kind: "Backend",
-    percentage: "70",
+    percentage: "80",
     description: "I develop projects at work using Laravel.",
     color: "bg-lime-400",
   },
@@ -318,13 +318,6 @@ const techSkills = [
     color: "bg-amber-400",
   },
   {
-    title: "Java",
-    kind: "Backend",
-    percentage: "30",
-    description: "I know the basics of JAVA.",
-    color: "bg-orange-400",
-  },
-  {
     title: "MySQL",
     kind: "Database",
     percentage: "80",
@@ -349,28 +342,16 @@ const techSkills = [
     color: "bg-pink-400",
   },
   {
-    title: "Git",
+    title: "GitHub",
     kind: "Other",
-    percentage: "60",
+    percentage: "80",
     color: "bg-rose-400",
   },
   {
-    title: "Power BI",
+    title: "SVN",
     kind: "Other",
-    percentage: "60",
-    color: "bg-purple-400",
-  },
-  {
-    title: "Qlik Sense",
-    kind: "Other",
-    percentage: "70",
-    color: "bg-fuchsia-400",
-  },
-  {
-    title: "Dynamics 365",
-    kind: "Other",
-    percentage: "60",
-    color: "bg-pink-400",
+    percentage: "80",
+    color: "bg-rose-400",
   },
   {
     title: "Jira",
