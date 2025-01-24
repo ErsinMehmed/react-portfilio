@@ -10,16 +10,11 @@ const Home = () => {
       <InViewAnimation>
         <div className='pt-5 w-full space-y-2.5 pr-10'>
           <p className='text-[#44566c] leading-7'>
-            Hi, my name is Ersin and I am a software developer and sports coach.
-            I have been programming for 5, both at university and in my spare
-            time, and also at work.
+            Hi, my name is Ersin, and I am a software developer and sports coach. I have been programming for 5 years, combining my passion for technology with professional experience. Over the years, I’ve honed my skills by working on various projects, both at work and in my spare time, constantly striving to deliver high-quality solutions.
           </p>
 
           <p className='text-[#44566c] leading-7'>
-            I have theoretical and practical knowledge of back-end and front-end
-            programming. My stronger side is web programming. You can find on
-            this site more information about my developments and projects that I
-            am working on.
+           I have both theoretical and practical expertise in back-end and front-end programming, with a strong focus on web development. Web programming is my greatest strength, and I continuously work on refining my skills in this area. On this site, you can explore more details about my work, including the developments and projects I am currently involved in.
           </p>
         </div>
       </InViewAnimation>
