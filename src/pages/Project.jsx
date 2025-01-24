@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout";
-import { projects } from "../Data";
 
 const projectTypes = ["All", "Personal", "Professional"];
 
