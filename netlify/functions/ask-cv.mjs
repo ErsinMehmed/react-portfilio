@@ -1,5 +1,6 @@
 import { cvContext } from "./cv-knowledge.mjs";
 import { putRecord, KIND } from "./analytics-store.mjs";
+import { isExcluded } from "./exclude.mjs";
 
 // Groq is OpenAI-compatible and free (llama-3.3-70b-versatile is fast + strong
 // enough for grounded CV Q&A). The API key lives only here, server-side, in the
@@ -174,6 +175,10 @@ export default async (req, context) => {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) return json({ error: "not_configured" }, 503);
 
+  // Resolved in parallel with the Groq round trip, so the owner-exclusion
+  // lookup costs the visitor nothing; only needed once the stream is set up.
+  const excluded = isExcluded(req, context);
+
   const ip = req.headers.get("x-nf-client-connection-ip") || "unknown";
   const now = Date.now();
   pruneStale(now);
@@ -225,15 +230,18 @@ export default async (req, context) => {
   // Pass Groq's OpenAI-style SSE through; the client reads the token deltas.
   // Streaming keeps the answer appearing word-by-word instead of after a
   // multi-second wait, which matters most for the long interview set. The tee
-  // records the exchange for /stats without delaying a single token.
-  const logged = res.body.pipeThrough(
-    answerLogger({
-      mode,
-      lang,
-      question: questionLabel(mode, payload),
-      country: context?.geo?.country?.code ?? undefined,
-    })
-  );
+  // records the exchange for /stats without delaying a single token — unless
+  // this is the owner testing his own bot, in which case nothing is recorded.
+  const logged = (await excluded)
+    ? res.body
+    : res.body.pipeThrough(
+        answerLogger({
+          mode,
+          lang,
+          question: questionLabel(mode, payload),
+          country: context?.geo?.country?.code ?? undefined,
+        })
+      );
 
   return new Response(logged, {
     status: 200,

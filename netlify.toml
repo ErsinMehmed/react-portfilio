@@ -16,9 +16,17 @@
 
 # Private analytics dashboard. Must stay ABOVE the SPA catch-all: Netlify
 # applies the first matching rule, so otherwise /stats would just serve the app.
-# The function enforces HTTP Basic Auth against STATS_USER / STATS_PASS (plain
-# server-side env vars — no VITE_ prefix, so they are never bundled into the
-# client). Without valid credentials the HTML is never produced at all.
+# The rule covers POST as well as GET, which is what the sign-in form and the
+# dashboard's action buttons post to.
+#
+# The function renders its own sign-in screen and checks STATS_USER /
+# STATS_PASS (plain server-side env vars — no VITE_ prefix, so they are never
+# bundled into the client), then keeps a signed session cookie. No
+# WWW-Authenticate is ever sent, so the browser's own credential dialog never
+# appears. Without a valid session the dashboard HTML is never produced at all.
+#
+# Optional: STATS_EXCLUDE_IPS, a comma-separated list of addresses whose visits
+# are never recorded. The dashboard offers the same thing self-service.
 [[redirects]]
   from = "/stats"
   to = "/.netlify/functions/stats"

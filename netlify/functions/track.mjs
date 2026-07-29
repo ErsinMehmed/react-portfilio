@@ -1,8 +1,11 @@
 import { putRecord, KIND } from "./analytics-store.mjs";
+import { isExcluded } from "./exclude.mjs";
 
 // Beacon sink for the private /stats dashboard. Deliberately tiny: it records
 // what a visitor did, never who they are. No IP is stored (only the country
-// Netlify already resolved at the edge) and no cookie is ever set.
+// Netlify already resolved at the edge) and no cookie is ever set for visitors
+// — the one cookie this site can set is the owner's own opt-out (see
+// exclude.mjs), which suppresses recording rather than enabling it.
 
 const ALLOWED_ORIGINS = [
   "https://ersin-mehmed.netlify.app",
@@ -39,6 +42,10 @@ export default async (req, context) => {
   // Crawlers and uptime checks would drown the real numbers.
   const ua = req.headers.get("user-agent") ?? "";
   if (BOT.test(ua)) return new Response(null, { status: 204 });
+
+  // The owner's own visits, likewise. Silent 204: the client can't tell the
+  // difference and never retries.
+  if (await isExcluded(req, context)) return new Response(null, { status: 204 });
 
   let body;
   try {

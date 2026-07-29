@@ -1,91 +1,106 @@
-import { createHash, timingSafeEqual } from "node:crypto";
 import {
   KIND,
   listDays,
   readDay,
   countsByDay,
   pruneExpired,
+  readSettings,
+  writeSettings,
+  hashIp,
   RETENTION_DAYS,
   dayOf,
 } from "./analytics-store.mjs";
+import { clientIp, invalidateExclusions, OPT_OUT_COOKIE } from "./exclude.mjs";
+import {
+  SESSION_COOKIE,
+  THEME_COOKIE,
+  buildCookie,
+  checkCredentials,
+  clearedSessionCookie,
+  clearFailures,
+  hasSession,
+  isConfigured,
+  isSecure,
+  readCookie,
+  recordFailure,
+  sessionCookie,
+  throttleState,
+} from "./stats-auth.mjs";
+import {
+  EVENT_LABELS,
+  REF_LABELS,
+  barChart,
+  countryLabel,
+  dayOfWeek,
+  esc,
+  header,
+  kpi,
+  loginPage,
+  longDay,
+  num,
+  page,
+  privacyPanel,
+  qaList,
+  rankedList,
+  shortDay,
+  sofiaHour,
+} from "./stats-view.mjs";
 
 // Private analytics dashboard, served straight from this function at /stats
 // (see the rewrite in netlify.toml). It is deliberately NOT a React route: the
 // HTML only exists after the credential check, so nothing about it ships in the
-// public bundle. Rendered server-side with no inline <script>, which keeps it
-// inside the site's strict CSP.
-
-const REF_LABELS = {
-  "cv-devbg": "CV on dev.bg",
-  "cv-jobsbg": "CV on jobs.bg",
-  cv: "CV (direct copy)",
-  linkedin: "LinkedIn",
-  github: "GitHub",
-  email: "Email signature",
-  qr: "Phone QR code",
-};
-
-const EVENT_LABELS = {
-  cv_download: "CV downloaded",
-  askcv_open: "Opened “Ask about me”",
-  case_study_open: "Opened a case study",
-  project_open: "Opened a project",
-  copy_email: "Copied the email",
-  lang_switch: "Switched language",
-  theme_switch: "Switched theme",
-};
-
-/* ---- auth ---- */
-
-const digest = (value) => createHash("sha256").update(String(value)).digest();
-
-// Hashing first makes both sides the same length, so timingSafeEqual can do its
-// job without leaking the credential length via an early throw.
-const safeEqual = (a, b) => timingSafeEqual(digest(a), digest(b));
-
-const isAuthed = (req) => {
-  const user = process.env.STATS_USER;
-  const pass = process.env.STATS_PASS;
-  // Unset credentials mean locked, never open.
-  if (!user || !pass) return false;
-
-  const [scheme, encoded] = (req.headers.get("authorization") ?? "").split(" ");
-  if (scheme !== "Basic" || !encoded) return false;
-
-  let decoded;
-  try {
-    decoded = Buffer.from(encoded, "base64").toString("utf8");
-  } catch {
-    return false;
-  }
-
-  const sep = decoded.indexOf(":");
-  if (sep === -1) return false;
-
-  return (
-    safeEqual(decoded.slice(0, sep), user) && safeEqual(decoded.slice(sep + 1), pass)
-  );
-};
+// public bundle. Sign-in is this function's own screen backed by a signed
+// session cookie (stats-auth.mjs), and everything renders server-side with no
+// inline <script>, which keeps the page inside the site's strict CSP.
 
 const PRIVATE_HEADERS = {
   "Cache-Control": "no-store, max-age=0",
   "X-Robots-Tag": "noindex, nofollow, noarchive",
 };
 
-const unauthorized = () =>
-  new Response("Authentication required.", {
-    status: 401,
-    headers: {
-      ...PRIVATE_HEADERS,
-      "WWW-Authenticate": 'Basic realm="stats", charset="UTF-8"',
-      "Content-Type": "text/plain; charset=utf-8",
-    },
+const html = (body, { status = 200, cookies = [] } = {}) => {
+  const headers = new Headers({
+    ...PRIVATE_HEADERS,
+    "Content-Type": "text/html; charset=utf-8",
   });
+  for (const cookie of cookies) headers.append("Set-Cookie", cookie);
+  return new Response(body, { status, headers });
+};
 
-/* ---- helpers ---- */
+/** POST-redirect-GET, so a refresh never replays an action. */
+const seeOther = (location, cookies = []) => {
+  const headers = new Headers({ ...PRIVATE_HEADERS, Location: location });
+  for (const cookie of cookies) headers.append("Set-Cookie", cookie);
+  return new Response(null, { status: 303, headers });
+};
 
-const ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
-const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ESCAPES[c]);
+/* ---- request helpers ---- */
+
+const THEMES = ["light", "dark"];
+
+const themeOf = (req, url) => {
+  const asked = url.searchParams.get("theme");
+  if (THEMES.includes(asked)) return asked;
+  const stored = readCookie(req, THEME_COOKIE);
+  // No cookie and no query means "follow the OS", which the CSS already does.
+  return THEMES.includes(stored) ? stored : "";
+};
+
+const statsUrl = (day) => (day ? `/stats?day=${encodeURIComponent(day)}` : "/stats");
+
+// SameSite=Strict on the session cookie already blocks cross-site form posts;
+// this is the belt to that pair of braces.
+const sameOrigin = (req) => {
+  const origin = req.headers.get("origin");
+  if (!origin) return true; // no Origin header at all (non-browser client)
+  try {
+    return new URL(origin).host === (req.headers.get("host") ?? new URL(req.url).host);
+  } catch {
+    return false;
+  }
+};
+
+/* ---- aggregation ---- */
 
 /** Count occurrences of `pick(row)`, most frequent first. */
 const tally = (rows, pick) => {
@@ -97,116 +112,227 @@ const tally = (rows, pick) => {
   return [...counts.entries()].sort((a, b) => b[1] - a[1]);
 };
 
-const time = (ts) => String(ts ?? "").slice(11, 19);
-
-const table = (title, rows, label = (k) => k) => {
-  if (!rows.length) return `<section><h2>${esc(title)}</h2><p class="empty">No data.</p></section>`;
-  const body = rows
-    .map(
-      ([key, count]) =>
-        `<tr><td>${esc(label(key))}</td><td class="num">${count}</td></tr>`
-    )
-    .join("");
-  return `<section><h2>${esc(title)}</h2><table>${body}</table></section>`;
+const hostOf = (referrer) => {
+  if (!referrer) return "";
+  try {
+    return new URL(referrer).hostname.replace(/^www\./, "");
+  } catch {
+    return referrer;
+  }
 };
 
-const STYLE = `
-:root{color-scheme:light dark;--bg:#0f172a;--card:#1e293b;--line:#334155;--text:#e2e8f0;--muted:#94a3b8;--brand:#60a5fa}
-*{box-sizing:border-box}
-body{margin:0;padding:24px;background:var(--bg);color:var(--text);font:14px/1.5 ui-sans-serif,system-ui,sans-serif}
-h1{margin:0;font-size:20px}
-h2{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-a{color:var(--brand)}
-header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between;margin-bottom:18px}
-.note{color:var(--muted);font-size:12px}
-.days{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
-.days a{display:inline-block;padding:4px 9px;border:1px solid var(--line);border-radius:999px;text-decoration:none;font-variant-numeric:tabular-nums}
-.days a.on{background:var(--brand);border-color:var(--brand);color:#0b1220;font-weight:600}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:22px}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
-.kpi b{display:block;font-size:26px;font-variant-numeric:tabular-nums}
-.kpi span{color:var(--muted);font-size:12px}
-.cols{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
-table{width:100%;border-collapse:collapse}
-td{padding:5px 0;border-bottom:1px solid var(--line);vertical-align:top}
-tr:last-child td{border-bottom:0}
-.num{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;width:60px}
-.empty{color:var(--muted);margin:0}
-.qa{border-bottom:1px solid var(--line);padding:12px 0}
-.qa:last-child{border-bottom:0}
-.qa .meta{color:var(--muted);font-size:11px;margin-bottom:4px}
-.qa .q{font-weight:600;margin:0 0 6px}
-.qa .a{margin:0;color:var(--muted);white-space:pre-wrap}
-`;
+const visitsIn = (events) =>
+  new Set(
+    events.filter((e) => e.type === "pageview").map((e) => e.sid).filter(Boolean)
+  ).size;
+
+/** The N calendar days ending at `day`, oldest first. */
+const dayWindow = (day, length) => {
+  const end = new Date(`${day}T00:00:00Z`).getTime();
+  return Array.from({ length }, (_, i) =>
+    dayOf(new Date(end - (length - 1 - i) * 86_400_000))
+  );
+};
+
+const shiftDay = (day, deltaDays) =>
+  dayOf(new Date(new Date(`${day}T00:00:00Z`).getTime() + deltaDays * 86_400_000));
 
 /* ---- render ---- */
 
-const render = ({ day, days, dayCounts, events, qa }) => {
+const dashboard = ({
+  day,
+  days,
+  dayCounts,
+  events,
+  qa,
+  previous,
+  theme,
+  excluded,
+  excludedCount,
+}) => {
   const pageviews = events.filter((e) => e.type === "pageview");
-  const visits = new Set(pageviews.map((e) => e.sid).filter(Boolean)).size;
   const actions = events.filter((e) => e.type !== "pageview");
+  const opens = actions.filter(
+    (e) => e.type === "case_study_open" || e.type === "project_open"
+  );
 
-  const dayLinks = days
-    .map(
-      (d) =>
-        `<a class="${d === day ? "on" : ""}" href="?day=${esc(d)}">${esc(d)} <span class="note">${
-          dayCounts[d] ?? 0
-        }</span></a>`
-    )
-    .join("");
-
-  const qaList = qa.length
-    ? qa
+  const dayLinks = days.length
+    ? days
         .map(
-          (r) => `<div class="qa">
-            <div class="meta">${esc(time(r.ts))} · ${esc(r.mode ?? "ask")} · ${esc(
-              r.lang ?? ""
-            )}${r.country ? ` · ${esc(r.country)}` : ""}</div>
-            <p class="q">${esc(r.question)}</p>
-            <p class="a">${esc(r.answer)}</p>
-          </div>`
+          (d) =>
+            `<a class="day${d === day ? " on" : ""}" href="${statsUrl(d)}" title="${esc(
+              longDay(d)
+            )}"><b class="tnum">${esc(shortDay(d))}</b><span class="c tnum">${num(
+              dayCounts[d] ?? 0
+            )}</span></a>`
         )
         .join("")
-    : '<p class="empty">No questions this day.</p>';
+    : '<span class="empty">Още няма записани данни.</span>';
 
-  return `<!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>Stats · ${esc(day)}</title>
-<style>${STYLE}</style>
-</head><body>
-<header>
-  <h1>Site stats</h1>
-  <p class="note">Day ${esc(day)} · kept ${RETENTION_DAYS} days · no IPs stored</p>
-</header>
+  const dayBars = dayWindow(day, 14).map((d) => ({
+    key: d,
+    label: `${dayOfWeek(d)} ${shortDay(d)}`,
+    axis: String(Number(d.slice(8))),
+    value: dayCounts[d] ?? 0,
+    active: d === day,
+  }));
 
-<nav class="days">${dayLinks || '<span class="note">No data yet.</span>'}</nav>
+  const byHour = new Array(24).fill(0);
+  for (const event of events) {
+    const hour = sofiaHour(event.ts);
+    if (hour !== null) byHour[hour] += 1;
+  }
+  const hourBars = byHour.map((value, hour) => ({
+    key: hour,
+    label: `${String(hour).padStart(2, "0")}:00`,
+    axis: hour % 3 === 0 ? String(hour) : "",
+    value,
+    active: false,
+  }));
+
+  return page({
+    title: `Статистика · ${day}`,
+    theme,
+    body: `
+${header({ day, theme, query: `day=${encodeURIComponent(day)}&` })}
+
+<nav class="days" aria-label="Дни">${dayLinks}</nav>
+
+<div class="kpis">
+  ${kpi(visitsIn(events), "Посещения (уникални сесии)", visitsIn(previous.events))}
+  ${kpi(pageviews.length, "Прегледи на страници", previous.events.filter((e) => e.type === "pageview").length)}
+  ${kpi(actions.length, "Действия", previous.events.filter((e) => e.type !== "pageview").length)}
+  ${kpi(qa.length, "Въпроса към AI", previous.qa)}
+</div>
+
+${barChart("Последни 14 дни", dayBars, "всички събития")}
+${barChart("Активност по часове", hourBars, "часова зона София")}
 
 <div class="grid">
-  <div class="kpi"><b>${visits}</b><span>Visits (unique tabs)</span></div>
-  <div class="kpi"><b>${pageviews.length}</b><span>Pageviews</span></div>
-  <div class="kpi"><b>${actions.length}</b><span>Actions</span></div>
-  <div class="kpi"><b>${qa.length}</b><span>AI questions</span></div>
+  ${rankedList(
+    "Източник на трафика",
+    tally(pageviews, (e) => e.ref || "direct"),
+    (k) => REF_LABELS[k] ?? (k === "direct" ? "Без маркер" : k)
+  )}
+  ${rankedList(
+    "Препращащ сайт",
+    tally(pageviews, (e) => hostOf(e.referrer) || "директно")
+  )}
+  ${rankedList("Държави", tally(events, (e) => e.country), countryLabel)}
+  ${rankedList("Страници", tally(pageviews, (e) => e.path))}
+  ${rankedList("Действия", tally(actions, (e) => e.type), (k) => EVENT_LABELS[k] ?? k)}
+  ${rankedList("Отворени проекти и case studies", tally(opens, (e) => e.meta))}
+  ${rankedList("Език на интерфейса", tally(events, (e) => e.lang), (k) =>
+    k === "bg" ? "Български" : k === "en" ? "Английски" : k
+  )}
+  ${rankedList("Кампании (utm_source)", tally(pageviews, (e) => e.utmSource))}
 </div>
 
-<div class="cols">
-  ${table("Came from (ref link)", tally(pageviews, (e) => e.ref), (k) => REF_LABELS[k] ?? k)}
-  ${table("Referrer", tally(pageviews, (e) => e.referrer))}
-  ${table("Country", tally(events, (e) => e.country))}
-  ${table("Pages", tally(pageviews, (e) => e.path))}
-  ${table("Actions", tally(actions, (e) => e.type), (k) => EVENT_LABELS[k] ?? k)}
-  ${table("Campaign (utm_source)", tally(pageviews, (e) => e.utmSource))}
-</div>
+<section class="card wide"><h2>Въпроси и отговори от AI</h2>${qaList(qa)}</section>
 
-<section><h2>AI questions &amp; answers</h2>${qaList}</section>
-</body></html>`;
+${privacyPanel({ excluded, day, count: excludedCount })}
+
+<p class="foot">Данните се пазят ${RETENTION_DAYS} дни и се изтриват автоматично. Не се съхраняват IP адреси, нито бисквитки за посетители.</p>
+`,
+  });
 };
 
-export default async (req) => {
-  if (!isAuthed(req)) return unauthorized();
+/* ---- actions ---- */
+
+const handlePost = async (req, context, theme) => {
+  const form = new URLSearchParams(await req.text());
+  const action = form.get("action");
+  const day = form.get("day") || "";
+
+  if (action === "login") {
+    const key = clientIp(req, context) || "unknown";
+    const throttle = throttleState(key);
+    if (throttle.blocked) {
+      return html(
+        loginPage({
+          theme,
+          error: `Твърде много опити. Опитай отново след ${throttle.minutes} мин.`,
+        }),
+        { status: 429 }
+      );
+    }
+
+    if (!isConfigured()) {
+      return html(
+        loginPage({ theme, error: "Панелът не е конфигуриран (липсват STATS_USER / STATS_PASS)." }),
+        { status: 503 }
+      );
+    }
+
+    if (!checkCredentials(form.get("user"), form.get("pass"))) {
+      recordFailure(key);
+      return html(
+        loginPage({ theme, error: "Грешно потребителско име или парола." }),
+        { status: 401 }
+      );
+    }
+
+    clearFailures(key);
+    return seeOther("/stats", [sessionCookie(req)]);
+  }
+
+  // Everything below changes state and needs a live session.
+  if (!hasSession(req) || !sameOrigin(req)) return seeOther("/stats");
+
+  if (action === "logout") {
+    return seeOther("/stats", [clearedSessionCookie(req)]);
+  }
+
+  if (action === "exclude_me" || action === "include_me") {
+    const adding = action === "exclude_me";
+    const fingerprint = hashIp(clientIp(req, context));
+    const { excludedIps } = await readSettings();
+
+    const next = adding
+      ? [...new Set([...excludedIps, fingerprint].filter(Boolean))]
+      : excludedIps.filter((entry) => entry !== fingerprint);
+    await writeSettings({ excludedIps: next });
+    invalidateExclusions();
+
+    // The cookie covers the same browser even after the IP changes — home
+    // connections and mobile networks hand out new addresses all the time.
+    const optOut = buildCookie(OPT_OUT_COOKIE, adding ? "1" : "", {
+      maxAge: adding ? 400 * 24 * 60 * 60 : 0,
+      secure: isSecure(req),
+      sameSite: "Lax",
+    });
+
+    return seeOther(statsUrl(day), [optOut]);
+  }
+
+  return seeOther(statsUrl(day));
+};
+
+/* ---- entry ---- */
+
+export default async (req, context) => {
+  const url = new URL(req.url);
+  const theme = themeOf(req, url);
+
+  // Theme is picked with a plain link; store it and bounce back to a clean URL.
+  if (THEMES.includes(url.searchParams.get("theme"))) {
+    const day = url.searchParams.get("day") || "";
+    return seeOther(statsUrl(day), [
+      buildCookie(THEME_COOKIE, theme, {
+        maxAge: 400 * 24 * 60 * 60,
+        secure: isSecure(req),
+      }),
+    ]);
+  }
+
+  if (req.method === "POST") return handlePost(req, context, theme);
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    return new Response(null, { status: 405, headers: PRIVATE_HEADERS });
+  }
+
+  // No WWW-Authenticate anywhere in this function: the browser's own credential
+  // dialog must never appear.
+  if (!hasSession(req)) return html(loginPage({ theme, error: "" }), { status: 200 });
 
   // Only ever triggered by an authenticated view, so retention costs no
   // visitor-facing latency.
@@ -218,20 +344,36 @@ export default async (req) => {
   ]);
   const days = [...new Set([...eventDays, ...qaDays])].sort().reverse();
 
-  const requested = new URL(req.url).searchParams.get("day");
+  const requested = url.searchParams.get("day");
   const day = days.includes(requested) ? requested : (days[0] ?? dayOf());
+  const yesterday = shiftDay(day, -1);
 
-  const [events, qa, dayCounts] = await Promise.all([
+  const [events, qa, dayCounts, prevEvents, prevQa, settings] = await Promise.all([
     readDay(KIND.event, day),
     readDay(KIND.qa, day),
     countsByDay(KIND.event),
+    readDay(KIND.event, yesterday),
+    readDay(KIND.qa, yesterday),
+    readSettings(),
   ]);
 
-  return new Response(render({ day, days, dayCounts, events, qa }), {
-    status: 200,
-    headers: {
-      ...PRIVATE_HEADERS,
-      "Content-Type": "text/html; charset=utf-8",
-    },
-  });
+  // Read straight from the blob rather than through the beacon's cache, so the
+  // panel reflects a toggle the instant it happens.
+  const excluded =
+    readCookie(req, OPT_OUT_COOKIE) === "1" ||
+    settings.excludedIps.includes(hashIp(clientIp(req, context)));
+
+  return html(
+    dashboard({
+      day,
+      days,
+      dayCounts,
+      events,
+      qa,
+      previous: { events: prevEvents, qa: prevQa.length },
+      theme,
+      excluded,
+      excludedCount: settings.excludedIps.length,
+    })
+  );
 };

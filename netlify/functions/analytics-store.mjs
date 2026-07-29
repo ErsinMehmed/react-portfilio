@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { getStore } from "@netlify/blobs";
 
 // Shared persistence for the private /stats dashboard. Netlify Blobs is part of
@@ -13,6 +14,14 @@ const STORE_NAME = "analytics";
 export const RETENTION_DAYS = 90;
 
 export const KIND = { event: "ev", qa: "qa" };
+
+/**
+ * Dashboard-owned settings blob. Lives under its own `cfg/` prefix so the
+ * per-kind listing and the retention sweep (both prefixed `ev/` or `qa/`)
+ * never see it.
+ */
+const SETTINGS_KEY = "cfg/settings.json";
+const DEFAULT_SETTINGS = { excludedIps: [] };
 
 // Blobs only resolves against a real Netlify runtime. The Vite dev middleware
 // has none, so fall back to an in-memory map there: local dev keeps working and
@@ -96,6 +105,49 @@ export const countsByDay = async (kind) => {
     if (day) counts[day] = (counts[day] ?? 0) + 1;
   }
   return counts;
+};
+
+/* ---- owner settings (the "don't count me" list) ---- */
+
+/**
+ * Salted one-way fingerprint of an IP address. The raw address is never
+ * written anywhere — the exclusion list holds only these digests, and they are
+ * only ever compared against a freshly hashed incoming IP. STATS_PASS doubles
+ * as the salt, so the digests are useless to anyone without the site secret
+ * and are invalidated automatically when the password is rotated.
+ */
+export const hashIp = (ip) =>
+  ip
+    ? createHash("sha256")
+        .update(`${process.env.STATS_PASS ?? "unsalted"}|${ip}`)
+        .digest("hex")
+        .slice(0, 32)
+    : "";
+
+/** Settings blob, with defaults filled in. Never throws. */
+export const readSettings = async () => {
+  try {
+    const s = store();
+    const raw = s
+      ? await s.get(SETTINGS_KEY, { type: "json" })
+      : memory.get(SETTINGS_KEY);
+    return { ...DEFAULT_SETTINGS, ...(raw ?? {}) };
+  } catch {
+    return { ...DEFAULT_SETTINGS };
+  }
+};
+
+/** Overwrite the settings blob. Returns what was actually stored. */
+export const writeSettings = async (settings) => {
+  const next = { ...DEFAULT_SETTINGS, ...settings };
+  try {
+    const s = store();
+    if (s) await s.setJSON(SETTINGS_KEY, next);
+    else memory.set(SETTINGS_KEY, next);
+  } catch {
+    /* best effort — a failed write just means the change didn't stick */
+  }
+  return next;
 };
 
 /** Drop anything past the retention window. Called on dashboard load. */

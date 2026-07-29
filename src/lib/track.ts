@@ -3,6 +3,9 @@
  * No cookies, no third party, no IP — the function only adds the country
  * Netlify already resolved at the edge.
  *
+ * The owner's own visits are dropped server-side (netlify/functions/exclude.mjs),
+ * toggled from the dashboard; nothing about that is decided here.
+ *
  * Attribution: append `?ref=<source>` to any link pointing here and the first
  * page of the visit records where it came from. The ref is then remembered for
  * the rest of the session, so later events stay attributed to the same source,
