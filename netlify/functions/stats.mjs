@@ -3,6 +3,8 @@ import {
   listDays,
   readDays,
   countsByDay,
+  countIn,
+  deleteDays,
   pruneExpired,
   readSettings,
   writeSettings,
@@ -44,6 +46,7 @@ import {
   kpi,
   loginPage,
   longDay,
+  maintenancePanel,
   num,
   page,
   privacyPanel,
@@ -152,9 +155,9 @@ const visitsIn = (events) =>
 
 /**
  * Regroup a flat event list into visits, keyed by the per-tab session id.
- * Everything below — bounce rate, duration, entry/exit pages, the source
- * funnel — is a question about a visit, not about an event, and the sid is
- * already there: no extra tracking was needed for any of it.
+ * Entry and exit pages, the journeys and the source funnel are all questions
+ * about a visit rather than about an event, and the sid is already on every
+ * record: no extra tracking was needed for any of it.
  */
 const buildSessions = (events) => {
   const sessions = new Map();
@@ -190,34 +193,11 @@ const buildSessions = (events) => {
     if (event.type === "outbound_click" && event.meta) session.outbound.add(event.meta);
   }
 
-  return [...sessions.values()].map((session) => {
-    const ms = Math.max(0, Date.parse(session.last) - Date.parse(session.first));
-    const acted = [...session.types].some((type) => !AUTO_TYPES.has(type));
-    return {
-      ...session,
-      ms,
-      acted,
-      // GA-style engagement: more than one page, or half a minute, or an
-      // intentional action. Anything else is a bounce.
-      engaged: session.paths.length > 1 || ms >= 30_000 || acted,
-      entry: session.paths[0],
-      exit: session.paths[session.paths.length - 1],
-    };
-  });
-};
-
-const median = (values) => {
-  if (!values.length) return 0;
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
-};
-
-const duration = (ms) => {
-  if (!ms) return "0 сек";
-  const seconds = Math.round(ms / 1000);
-  if (seconds < 60) return `${seconds} сек`;
-  return `${Math.floor(seconds / 60)} мин ${String(seconds % 60).padStart(2, "0")} сек`;
+  return [...sessions.values()].map((session) => ({
+    ...session,
+    entry: session.paths[0],
+    exit: session.paths[session.paths.length - 1],
+  }));
 };
 
 const share = (part, whole) => (whole ? Math.round((part / whole) * 100) : 0);
@@ -285,6 +265,8 @@ const dashboard = ({
   theme,
   excluded,
   excludedCount,
+  wipe,
+  counts,
 }) => {
   const pageviews = events.filter((e) => e.type === "pageview");
   const actions = events.filter(isAction);
@@ -297,12 +279,6 @@ const dashboard = ({
   const downloads = actions.filter((e) => e.type === "cv_download");
 
   const sessions = buildSessions(events);
-  const engaged = sessions.filter((s) => s.engaged);
-  const durations = sessions.filter((s) => s.ms > 0).map((s) => s.ms);
-  const avgMs = durations.length
-    ? Math.round(durations.reduce((sum, ms) => sum + ms, 0) / durations.length)
-    : 0;
-
   const qaSessions = new Set(qa.map((r) => r.sid).filter(Boolean));
   const qaTimes = qa.map((r) => r.ms).filter((ms) => Number.isFinite(ms) && ms > 0);
   const gaps = qa.filter((r) => GAP.test(String(r.answer ?? "")));
@@ -383,21 +359,6 @@ ${rangePills(day, range)}
 </div>
 
 <div class="grid">
-  ${statCard("Ангажираност", [
-    ["Ангажирани посещения", `${share(engaged.length, sessions.length)}%`, `${num(engaged.length)} от ${num(sessions.length)}`],
-    ["Отпаднали веднага", `${share(sessions.length - engaged.length, sessions.length)}%`, "една страница, без действие"],
-    ["Средна продължителност", duration(avgMs)],
-    ["Медиана", duration(median(durations))],
-    [
-      "Страници на посещение",
-      sessions.length ? (pageviews.length / sessions.length).toFixed(1) : "0",
-    ],
-    [
-      "Връщащи се",
-      `${share(sessions.filter((s) => s.returning).length, sessions.length)}%`,
-      "били са тук и в предишен ден",
-    ],
-  ])}
   ${rankedList("Устройство", tally(events, (e) => e.device), (k) => DEVICE_LABELS[k] ?? k, 3)}
   ${rankedList("Операционна система", tally(events, (e) => e.os), (k) => k, 5)}
 </div>
@@ -495,6 +456,8 @@ ${groupHeading("AI разговори")}
 
 <section class="card wide"><h2>Въпроси и отговори от AI</h2>${qaList(qa)}</section>
 
+${maintenancePanel({ day, range, wipe, periodLabel, counts })}
+
 ${privacyPanel({ excluded, day, range, count: excludedCount })}
 
 <p class="foot">Данните се пазят ${RETENTION_DAYS} дни и се изтриват автоматично. Не се съхраняват IP адреси, нито бисквитки за посетители.</p>
@@ -571,6 +534,17 @@ const handlePost = async (req, context, theme) => {
     return seeOther(statsUrl(day, range), [optOut]);
   }
 
+  // Irreversible, and reached only from the dashboard's confirmation card.
+  if (action === "wipe_range") {
+    await deleteDays(dayWindow(day || dayOf(), range));
+    return seeOther(statsUrl(day, range));
+  }
+
+  if (action === "wipe_all") {
+    await deleteDays();
+    return seeOther("/stats");
+  }
+
   return seeOther(statsUrl(day, range));
 };
 
@@ -619,13 +593,25 @@ export default async (req, context) => {
   const windowDays = dayWindow(day, range);
   const previousDays = dayWindow(shiftDay(windowDays[0], -1), range);
 
-  const [events, qa, dayCounts, prevEvents, prevQa, settings] = await Promise.all([
+  // Only the confirmation card needs the record counts, so they are fetched
+  // only when it is being shown.
+  const wipe = ["range", "all"].includes(url.searchParams.get("wipe"))
+    ? url.searchParams.get("wipe")
+    : "";
+
+  const [events, qa, dayCounts, prevEvents, prevQa, settings, counts] = await Promise.all([
     readDays(KIND.event, windowDays),
     readDays(KIND.qa, windowDays),
     countsByDay(KIND.event),
     readDays(KIND.event, previousDays),
     readDays(KIND.qa, previousDays),
     readSettings(),
+    wipe
+      ? Promise.all([countIn(windowDays), countIn()]).then(([period, total]) => ({
+          period,
+          total,
+        }))
+      : Promise.resolve({ period: 0, total: 0 }),
   ]);
 
   // Read straight from the blob rather than through the beacon's cache, so the
@@ -652,6 +638,8 @@ export default async (req, context) => {
       theme,
       excluded,
       excludedCount: settings.excludedIps.length,
+      wipe,
+      counts,
     })
   );
 };

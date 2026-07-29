@@ -158,6 +158,49 @@ export const writeSettings = async (settings) => {
   return next;
 };
 
+/* ---- deletion ---- */
+
+const removeKeys = async (keys) => {
+  const s = store();
+  let removed = 0;
+  for (const key of keys) {
+    try {
+      if (s) await s.delete(key);
+      else memory.delete(key);
+      removed += 1;
+    } catch {
+      /* best effort — a failed delete just leaves the record in place */
+    }
+  }
+  return removed;
+};
+
+/** Number of records stored for the given days, across both kinds. */
+export const countIn = async (days) => {
+  const wanted = days ? new Set(days) : null;
+  let total = 0;
+  for (const kind of Object.values(KIND)) {
+    const keys = await allKeys(kind);
+    total += wanted ? keys.filter((k) => wanted.has(keyDay(k))).length : keys.length;
+  }
+  return total;
+};
+
+/**
+ * Erase every event and question recorded on the given days — or all of them
+ * when `days` is omitted. Nothing here is recoverable, so the dashboard asks
+ * for a confirmation before calling it.
+ */
+export const deleteDays = async (days) => {
+  const wanted = days ? new Set(days) : null;
+  let removed = 0;
+  for (const kind of Object.values(KIND)) {
+    const keys = await allKeys(kind);
+    removed += await removeKeys(wanted ? keys.filter((k) => wanted.has(keyDay(k))) : keys);
+  }
+  return removed;
+};
+
 /** Drop anything past the retention window. Called on dashboard load. */
 export const pruneExpired = async () => {
   const cutoff = dayOf(new Date(Date.now() - RETENTION_DAYS * 86_400_000));

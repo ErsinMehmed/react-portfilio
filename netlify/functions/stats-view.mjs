@@ -308,9 +308,9 @@ form.inline{display:inline}
 
 /* definition rows inside a card */
 .stats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-.stats li{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+.stats li{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:2px 14px}
 .stats .sl{font-size:13.5px;color:var(--muted)}
-.stats .sv{font-size:15px;font-weight:700;white-space:nowrap}
+.stats .sv{font-size:15px;font-weight:700;white-space:nowrap;text-align:right}
 .stats .sh{display:block;font-size:11.5px;font-weight:600;color:var(--faint);text-align:right}
 
 /* comparison table */
@@ -346,6 +346,14 @@ table.tbl .rate.low{color:var(--faint)}
 .tag{background:var(--surface-2);color:var(--muted);border-radius:999px;padding:1px 8px;font-weight:600}
 .qa .q{margin:0 0 6px;font-weight:600;font-size:14.5px}
 .qa .a{margin:0;color:var(--muted);font-size:13.5px;white-space:pre-wrap}
+
+/* maintenance + confirm */
+.privacy .row,.danger .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.card.danger{border-color:color-mix(in srgb,var(--down) 45%,var(--line));margin-bottom:16px}
+.card.danger h2{color:var(--down)}
+.card.danger p{margin:0 0 14px;font-size:13.5px;color:var(--text-2);max-width:70ch}
+.btn.destructive{background:var(--down);border-color:var(--down);color:#fff}
+.btn.destructive:hover{background:var(--down);border-color:var(--down);color:#fff;filter:brightness(1.08)}
 
 /* privacy panel */
 .privacy{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
@@ -612,6 +620,48 @@ export const header = ({ subtitle, theme, query }) => `<header class="top">
   </div>
 </header>`;
 
+/**
+ * Deleting recorded data. Two steps on purpose: the first click only asks,
+ * because there is no undo — the blobs are gone. Rendered as a link plus a
+ * form rather than a JS confirm(), since the page ships no script.
+ */
+export const maintenancePanel = ({ day, range, wipe, periodLabel, counts }) => {
+  if (wipe === "range" || wipe === "all") {
+    const all = wipe === "all";
+    return `<section class="card danger">
+  <h2>Потвърди изтриването</h2>
+  <p>${
+    all
+      ? `Изтриваш <b>всички</b> записи — ${num(counts.total)} събития и въпроси за всички дни.`
+      : `Изтриваш записите за <b>${esc(periodLabel)}</b> — ${num(counts.period)} събития и въпроси.`
+  } Действието е необратимо.</p>
+  <div class="row">
+    <form method="post" action="/stats">
+      <input type="hidden" name="action" value="${all ? "wipe_all" : "wipe_range"}">
+      <input type="hidden" name="day" value="${esc(day)}">
+      <input type="hidden" name="range" value="${esc(range)}">
+      <button class="btn destructive" type="submit">Да, изтрий</button>
+    </form>
+    <a class="btn ghost" href="/stats?day=${encodeURIComponent(day)}&range=${range}">Откажи</a>
+  </div>
+</section>`;
+  }
+
+  return `<section class="card privacy">
+  <div>
+    <span class="state">Изтриване на записи</span>
+    <p style="margin-top:6px">
+      Собствените ти посещения отпреди включването на изключването си остават в числата — в записите няма IP,
+      така че никой филтър не може да ги разпознае. Затова изтриването е по период.
+    </p>
+  </div>
+  <div class="row">
+    <a class="btn" href="/stats?day=${encodeURIComponent(day)}&range=${range}&wipe=range">Изтрий периода</a>
+    <a class="btn" href="/stats?day=${encodeURIComponent(day)}&range=${range}&wipe=all">Изтрий всичко</a>
+  </div>
+</section>`;
+};
+
 export const privacyPanel = ({ excluded, day, range, count }) => `<section class="card privacy">
   <div>
     <span class="state"><span class="dot${excluded ? "" : " off"}"></span>${
@@ -624,7 +674,7 @@ export const privacyPanel = ({ excluded, day, range, count }) => `<section class
           : "Включи изключването, за да не влизат собствените ти посещения в числата. Пази се само необратим хеш на IP адреса, не самият адрес."
       }
       ${count ? `<b>Изключени адреси: ${num(count)}.</b>` : ""}
-      Вече записаните събития не се променят с обратна сила.
+      Вече записаните събития остават — изтриват се само през панела отдолу.
     </p>
   </div>
   <form method="post" action="/stats">
