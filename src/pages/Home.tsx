@@ -68,7 +68,11 @@ const Home = () => {
         </h2>
       </InViewAnimation>
 
-      <div className='mt-6 border-t border-slate-200/70 dark:border-slate-800'>
+      {/* data-track-section: read by src/lib/track.ts to record which parts of
+          a page a visitor actually reached. Name it, don't style it. */}
+      <div
+        data-track-section='what-i-do'
+        className='mt-6 border-t border-slate-200/70 dark:border-slate-800'>
         {mainSkills.map((item, index) => (
           <InViewAnimation
             key={index}

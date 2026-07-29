@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useLayoutEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Loading from "./components/Loading";
-import { track } from "./lib/track";
+import { track, trackOutboundClicks, trackPageEngagement } from "./lib/track";
 import { routes, routePatterns } from "./routes";
 
 // Lazy so framer-motion (pulled in by these) stays out of the entry chunk.
@@ -50,6 +50,13 @@ function App() {
   useEffect(() => {
     track("pageview");
   }, [location.pathname]);
+
+  // Scroll depth and section reach, re-armed per route.
+  useEffect(() => trackPageEngagement(location.pathname), [location.pathname]);
+
+  // Links that leave the site (GitHub, LinkedIn, demos, mailto, tel): one
+  // delegated listener for the whole app, attached once.
+  useEffect(() => trackOutboundClicks(), []);
 
   // Key the route subtree by path so each navigation remounts the page and its
   // in-view reveals replay — the transition lives entirely in those section

@@ -32,6 +32,9 @@ export const EVENT_LABELS = {
   copy_email: "Копиран имейл",
   lang_switch: "Смяна на език",
   theme_switch: "Смяна на тема",
+  outbound_click: "Клик към външен линк",
+  scroll_depth: "Скрол надолу",
+  section_view: "Достигната секция",
 };
 
 const MODE_LABELS = {
@@ -39,6 +42,33 @@ const MODE_LABELS = {
   interview: "интервю",
   decision: "решения",
 };
+
+export const DEVICE_LABELS = {
+  mobile: "Телефон",
+  tablet: "Таблет",
+  desktop: "Компютър",
+};
+
+/** data-track-section values from the pages and the case-study sections. */
+export const SECTION_LABELS = {
+  "what-i-do": "Начало · Какво правя",
+  experience: "CV · Опит",
+  recommendations: "CV · Препоръки",
+  skills: "CV · Умения",
+  problem: "Case study · Проблем",
+  architecture: "Case study · Архитектура",
+  decisions: "Case study · Решения",
+  results: "Case study · Резултати",
+  stack: "Case study · Стек",
+};
+
+export const OUTBOUND_LABELS = {
+  mailto: "Имейл линк",
+  tel: "Телефонен линк",
+};
+
+export const LANG_LABELS = { bg: "Български", en: "Английски" };
+
 
 /* ---- formatting ---- */
 
@@ -269,6 +299,36 @@ form.inline{display:inline}
 .xaxis{display:flex;gap:6px;margin-top:8px}
 .xaxis span{flex:1;text-align:center;font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden}
 
+/* group heading */
+.group{
+  margin:26px 0 14px;font-size:13px;font-weight:700;letter-spacing:.01em;color:var(--text-2);
+  display:flex;align-items:center;gap:12px;
+}
+.group::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* definition rows inside a card */
+.stats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.stats li{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+.stats .sl{font-size:13.5px;color:var(--muted)}
+.stats .sv{font-size:15px;font-weight:700;white-space:nowrap}
+.stats .sh{display:block;font-size:11.5px;font-weight:600;color:var(--faint);text-align:right}
+
+/* comparison table */
+.tblwrap{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+table.tbl th{
+  text-align:right;padding:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--faint);white-space:nowrap;
+}
+table.tbl th:first-child{text-align:left}
+table.tbl td{padding:9px 0;border-top:1px solid var(--line);text-align:right;white-space:nowrap}
+table.tbl td:first-child{text-align:left;color:var(--text-2);white-space:normal;padding-right:14px}
+table.tbl td+td{padding-left:14px}
+table.tbl .strong{font-weight:700}
+table.tbl .rate{font-weight:700;color:var(--brand)}
+table.tbl .rate.low{color:var(--faint)}
+
+
 /* ranked lists */
 .list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
 .list li{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:baseline}
@@ -446,8 +506,74 @@ export const kpi = (value, label, previous) => `<div class="card kpi">
   <span class="l">${esc(label)}</span>
 </div>`;
 
+/** Section divider between thematic groups of cards. */
+export const groupHeading = (title) => `<h3 class="group">${esc(title)}</h3>`;
+
+/**
+ * Card of label/value rows, for figures that are single numbers rather than
+ * rankings (engagement, AI timings). `rows` is [label, value, hint?][].
+ */
+export const statCard = (title, rows) => {
+  const items = rows
+    .filter(Boolean)
+    .map(
+      ([label, value, hint]) => `<li>
+      <span class="sl">${esc(label)}</span>
+      <span class="sv tnum">${esc(value)}${hint ? `<span class="sh">${esc(hint)}</span>` : ""}</span>
+    </li>`
+    )
+    .join("");
+  return `<section class="card"><h2>${esc(title)}</h2><ul class="stats">${items}</ul></section>`;
+};
+
+/**
+ * Comparison table. `head` is the column labels (first one left-aligned),
+ * `rows` is arrays of cells — a cell may be a string or `{ v, cls }`.
+ */
+export const compareTable = (title, head, rows, note = "") => {
+  if (!rows.length) {
+    return `<section class="card wide"><h2>${esc(title)}</h2><p class="empty">Няма данни.</p></section>`;
+  }
+  const ths = head.map((h) => `<th>${esc(h)}</th>`).join("");
+  const trs = rows
+    .map(
+      (cells) =>
+        `<tr>${cells
+          .map((cell) =>
+            typeof cell === "object" && cell !== null
+              ? `<td class="${esc(cell.cls ?? "")}">${esc(cell.v)}</td>`
+              : `<td>${esc(cell)}</td>`
+          )
+          .join("")}</tr>`
+    )
+    .join("");
+
+  return `<section class="card wide">
+  <h2>${esc(title)}</h2>
+  <div class="tblwrap"><table class="tbl"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></div>
+  ${note ? `<p class="empty" style="margin-top:12px">${esc(note)}</p>` : ""}
+</section>`;
+};
+
+/** Day / 7-day / 30-day switch. Plain links, so no JavaScript is involved. */
+export const rangePills = (day, range) => {
+  const options = [
+    [1, "Ден"],
+    [7, "7 дни"],
+    [30, "30 дни"],
+  ];
+  return `<div class="days" role="group" aria-label="Период">${options
+    .map(
+      ([value, label]) =>
+        `<a class="day${value === range ? " on" : ""}" href="/stats?day=${encodeURIComponent(
+          day
+        )}&range=${value}">${esc(label)}</a>`
+    )
+    .join("")}</div>`;
+};
+
 export const qaList = (rows) => {
-  if (!rows.length) return '<p class="empty">Няма зададени въпроси този ден.</p>';
+  if (!rows.length) return '<p class="empty">Няма зададени въпроси в този период.</p>';
   return `<div class="qa">${rows
     .map(
       (r) => `<div class="item">
@@ -455,6 +581,10 @@ export const qaList = (rows) => {
         <span class="tnum">${esc(clock(r.ts))}</span>
         <span class="tag">${esc(MODE_LABELS[r.mode] ?? r.mode ?? "въпрос")}</span>
         ${r.lang ? `<span class="tag">${esc(String(r.lang).toUpperCase())}</span>` : ""}
+        ${r.turn > 1 ? `<span class="tag">${r.turn}-и въпрос</span>` : ""}
+        ${r.followup ? '<span class="tag">от подсказка</span>' : ""}
+        ${r.ms ? `<span class="tnum">${(r.ms / 1000).toFixed(1)} сек</span>` : ""}
+        ${r.device ? `<span>${esc(DEVICE_LABELS[r.device] ?? r.device)}</span>` : ""}
         ${r.country ? `<span>${esc(countryLabel(r.country))}</span>` : ""}
       </div>
       <p class="q">${esc(r.question)}</p>
@@ -464,12 +594,12 @@ export const qaList = (rows) => {
     .join("")}</div>`;
 };
 
-export const header = ({ day, theme, query }) => `<header class="top">
+export const header = ({ subtitle, theme, query }) => `<header class="top">
   <div class="brandline">
     ${MARK}
     <div>
       <h1>Статистика</h1>
-      <p class="sub">${esc(longDay(day))} · собствен анализ, без външни услуги</p>
+      <p class="sub">${esc(subtitle)}</p>
     </div>
   </div>
   <div class="tools">
@@ -482,7 +612,7 @@ export const header = ({ day, theme, query }) => `<header class="top">
   </div>
 </header>`;
 
-export const privacyPanel = ({ excluded, day, count }) => `<section class="card privacy">
+export const privacyPanel = ({ excluded, day, range, count }) => `<section class="card privacy">
   <div>
     <span class="state"><span class="dot${excluded ? "" : " off"}"></span>${
       excluded ? "Твоите посещения не се броят" : "Твоите посещения се броят"
@@ -500,6 +630,7 @@ export const privacyPanel = ({ excluded, day, count }) => `<section class="card 
   <form method="post" action="/stats">
     <input type="hidden" name="action" value="${excluded ? "include_me" : "exclude_me"}">
     <input type="hidden" name="day" value="${esc(day)}">
+    <input type="hidden" name="range" value="${esc(range ?? 1)}">
     <button class="btn" type="submit">${excluded ? "Брой ме отново" : "Не ме брой"}</button>
   </form>
 </section>`;

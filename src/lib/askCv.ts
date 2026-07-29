@@ -1,4 +1,5 @@
 import type { Lang } from "../i18n/LanguageContext";
+import { sessionId } from "./track";
 
 /** The one serverless endpoint behind every AI feature (see netlify/functions/ask-cv.mjs). */
 export const ASK_CV_ENDPOINT = "/.netlify/functions/ask-cv";
@@ -19,6 +20,10 @@ export interface StreamAskCvParams {
   question?: string;
   lang: Lang;
   decision?: DecisionInput;
+  /** Came from a suggested follow-up chip rather than the input box. */
+  followup?: boolean;
+  /** 1-based position of this question within the visit's conversation. */
+  turn?: number;
   /** Called on every token with the full accumulated raw text so far. */
   onToken: (fullRaw: string) => void;
   signal?: AbortSignal;
@@ -40,6 +45,13 @@ export async function streamAskCv(params: StreamAskCvParams): Promise<string> {
       question: params.question,
       lang: params.lang,
       decision: params.decision,
+      // Conversation metadata for /stats only — the same per-tab session id the
+      // beacon uses, so a question can be read next to the visit that asked it.
+      // Never reaches the model; the function strips it before building the
+      // prompt.
+      sid: sessionId(),
+      followup: params.followup ?? false,
+      turn: params.turn,
     }),
     signal: params.signal,
   });

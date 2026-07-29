@@ -90,6 +90,9 @@ const AskCvModal = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const idRef = useRef(0);
+  // How many questions this visit has asked — sent with each request so /stats
+  // can tell a one-off from a real conversation.
+  const turnRef = useRef(0);
 
   const close = () => setOpen(false);
 
@@ -119,12 +122,16 @@ const AskCvModal = () => {
     mode,
     question,
     userLabel,
+    followup = false,
   }: {
     mode: AskCvMode;
     question?: string;
     userLabel: string;
+    followup?: boolean;
   }) => {
     if (loading) return;
+
+    turnRef.current += 1;
 
     const userMsg: Message = { id: idRef.current++, role: "user", text: userLabel };
     const assistantId = idRef.current++;
@@ -141,6 +148,8 @@ const AskCvModal = () => {
         mode,
         question,
         lang,
+        followup,
+        turn: turnRef.current,
         onToken: (full) =>
           patch(assistantId, { text: mode === "ask" ? stripMeta(full) : full }),
       });
@@ -168,10 +177,10 @@ const AskCvModal = () => {
     }
   };
 
-  const ask = (question: string) => {
+  const ask = (question: string, followup = false) => {
     const q = question.trim();
     if (!q) return;
-    send({ mode: "ask", question: q, userLabel: q });
+    send({ mode: "ask", question: q, userLabel: q, followup });
   };
 
   const onSubmit = (e: FormEvent) => {
@@ -289,7 +298,7 @@ const AskCvModal = () => {
             msg={msg}
             sourcesLabel={t("askCv.sources")}
             followupsLabel={t("askCv.followups")}
-            onFollowup={ask}
+            onFollowup={(q) => ask(q, true)}
             disabled={loading}
           />
         ))}

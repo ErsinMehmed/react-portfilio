@@ -1,5 +1,6 @@
 import { putRecord, KIND } from "./analytics-store.mjs";
 import { isExcluded } from "./exclude.mjs";
+import { classifyUa } from "./ua.mjs";
 
 // Beacon sink for the private /stats dashboard. Deliberately tiny: it records
 // what a visitor did, never who they are. No IP is stored (only the country
@@ -24,6 +25,9 @@ const EVENTS = new Set([
   "copy_email",
   "lang_switch",
   "theme_switch",
+  "outbound_click",
+  "scroll_depth",
+  "section_view",
 ]);
 
 const BOT = /bot|crawl|spider|slurp|bingpreview|headless|lighthouse|preview|monitor|curl|wget|python-requests/i;
@@ -73,6 +77,11 @@ export default async (req, context) => {
     meta: clean(body?.meta, 120),
     lang: clean(body?.lang, 5),
     country: context?.geo?.country?.code ?? undefined,
+    // Been here on an earlier day. A boolean the client derives from a stored
+    // date, never an id — see the note in src/lib/track.ts.
+    returning: body?.returning === true ? true : body?.returning === false ? false : undefined,
+    // Coarse buckets only; the raw UA string is not stored.
+    ...classifyUa(ua),
   });
 
   return new Response(null, { status: 204 });

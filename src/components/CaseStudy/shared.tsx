@@ -42,10 +42,15 @@ interface SectionProps {
   className?: string;
 }
 
-/** Consistent vertical rhythm + a scroll anchor for the section nav. */
+/**
+ * Consistent vertical rhythm + a scroll anchor for the section nav. The id
+ * doubles as the /stats section marker (src/lib/track.ts), so a case study
+ * reports how far a reader actually got; the event's path says which one.
+ */
 export const Section = ({ id, children, className = "" }: SectionProps) => (
   <section
     id={id}
+    data-track-section={id}
     className={`scroll-mt-24 ${className}`}>
     {children}
   </section>

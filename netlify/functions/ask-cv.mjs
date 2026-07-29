@@ -1,6 +1,7 @@
 import { cvContext } from "./cv-knowledge.mjs";
 import { putRecord, KIND } from "./analytics-store.mjs";
 import { isExcluded } from "./exclude.mjs";
+import { classifyUa } from "./ua.mjs";
 
 // Groq is OpenAI-compatible and free (llama-3.3-70b-versatile is fast + strong
 // enough for grounded CV Q&A). The API key lives only here, server-side, in the
@@ -136,6 +137,7 @@ const questionLabel = (mode, payload) => {
 // streamed — so there is no background work to get killed after the return.
 const answerLogger = (meta) => {
   const decoder = new TextDecoder();
+  const startedAt = Date.now();
   let buffer = "";
   let answer = "";
 
@@ -161,7 +163,13 @@ const answerLogger = (meta) => {
       }
     },
     async flush() {
-      await putRecord(KIND.qa, { ...meta, answer: answer.slice(0, 8000) });
+      await putRecord(KIND.qa, {
+        ...meta,
+        answer: answer.slice(0, 8000),
+        // How long the visitor waited for the full answer, and how long it was.
+        ms: Date.now() - startedAt,
+        chars: answer.length,
+      });
     },
   });
 };
@@ -240,6 +248,11 @@ export default async (req, context) => {
           lang,
           question: questionLabel(mode, payload),
           country: context?.geo?.country?.code ?? undefined,
+          // Conversation shape, for /stats only — none of it reaches the model.
+          sid: typeof payload?.sid === "string" ? payload.sid.slice(0, 16) : undefined,
+          followup: payload?.followup === true,
+          turn: Number.isFinite(payload?.turn) ? Math.min(payload.turn, 99) : undefined,
+          ...classifyUa(req.headers.get("user-agent") ?? ""),
         })
       );
 

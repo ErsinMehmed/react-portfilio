@@ -76,9 +76,14 @@ export const listDays = async (kind) => {
   return [...new Set(keys.map(keyDay))].filter(Boolean).sort().reverse();
 };
 
-/** All records for one kind on one day, oldest first. */
-export const readDay = async (kind, day) => {
-  const keys = (await allKeys(kind)).filter((k) => keyDay(k) === day);
+/**
+ * All records for one kind across several days, oldest first. One key listing
+ * for the whole range, which is what makes the 7- and 30-day dashboard views
+ * affordable — a per-day loop would list the whole store once per day.
+ */
+export const readDays = async (kind, days) => {
+  const wanted = new Set(days);
+  const keys = (await allKeys(kind)).filter((k) => wanted.has(keyDay(k)));
   const s = store();
 
   const records = await Promise.all(
@@ -95,6 +100,9 @@ export const readDay = async (kind, day) => {
     .filter(Boolean)
     .sort((a, b) => String(a.ts).localeCompare(String(b.ts)));
 };
+
+/** All records for one kind on one day, oldest first. */
+export const readDay = (kind, day) => readDays(kind, [day]);
 
 /** Total record count per day, for the dashboard's day index. */
 export const countsByDay = async (kind) => {

@@ -25,13 +25,15 @@ const ENDPOINT = "/.netlify/functions/track";
 const REF_KEY = "ref";
 const UTM_KEY = "utm";
 const SID_KEY = "sid";
+const FIRST_SEEN_KEY = "firstSeen";
+const RETURNING_KEY = "returning";
 
 /**
  * Per-tab random id, used only to count one visit as one visit instead of N
  * pageviews. It lives in sessionStorage, so it dies with the tab and can never
  * link two visits — not a cookie, not an identity.
  */
-const sessionId = (): string | undefined => {
+export const sessionId = (): string | undefined => {
   try {
     let sid = sessionStorage.getItem(SID_KEY);
     if (!sid) {
@@ -39,6 +41,31 @@ const sessionId = (): string | undefined => {
       sessionStorage.setItem(SID_KEY, sid);
     }
     return sid;
+  } catch {
+    return undefined;
+  }
+};
+
+/**
+ * Whether this visitor has been here on an earlier day.
+ *
+ * Deliberately a boolean, not an identifier: localStorage holds only the date
+ * of the first visit, which can't link two sessions to each other or single
+ * anyone out. Computed once per tab and cached in sessionStorage so every
+ * event in a visit reports the same value.
+ */
+const isReturning = (): boolean | undefined => {
+  try {
+    const cached = sessionStorage.getItem(RETURNING_KEY);
+    if (cached) return cached === "1";
+
+    const firstSeen = localStorage.getItem(FIRST_SEEN_KEY);
+    const today = new Date().toISOString().slice(0, 10);
+    const returning = Boolean(firstSeen && firstSeen !== today);
+
+    if (!firstSeen) localStorage.setItem(FIRST_SEEN_KEY, today);
+    sessionStorage.setItem(RETURNING_KEY, returning ? "1" : "0");
+    return returning;
   } catch {
     return undefined;
   }
@@ -52,7 +79,10 @@ export type TrackEvent =
   | "project_open"
   | "copy_email"
   | "lang_switch"
-  | "theme_switch";
+  | "theme_switch"
+  | "outbound_click"
+  | "scroll_depth"
+  | "section_view";
 
 interface Utm {
   utmSource?: string;
@@ -128,6 +158,7 @@ export const track = (type: TrackEvent, meta?: string): void => {
       ...storedUtm(),
       meta,
       lang: document.documentElement.lang || undefined,
+      returning: isReturning(),
     });
 
     // keepalive so the beacon still leaves during an unload/navigation.
@@ -140,4 +171,117 @@ export const track = (type: TrackEvent, meta?: string): void => {
   } catch {
     /* analytics must never break the page */
   }
+};
+
+/* ---- automatic signals ---- */
+
+/**
+ * Label for a link leaving the site. Hostname plus a short path, so
+ * "github.com/ErsinMehmed/x" and "github.com/ErsinMehmed/y" don't collapse
+ * into one row while the dashboard still stays readable.
+ */
+export const outboundLabel = (href: string): string | undefined => {
+  try {
+    const url = new URL(href, window.location.href);
+
+    if (url.protocol === "mailto:") return "mailto";
+    if (url.protocol === "tel:") return "tel";
+    if (url.protocol !== "http:" && url.protocol !== "https:") return undefined;
+    if (url.host === window.location.host) return undefined;
+
+    const path = url.pathname.replace(/\/$/, "");
+    return `${url.host.replace(/^www\./, "")}${path}`.slice(0, 60);
+  } catch {
+    return undefined;
+  }
+};
+
+/** One delegated listener for every link that leaves the site. */
+export const trackOutboundClicks = (): (() => void) => {
+  const onClick = (event: MouseEvent) => {
+    const link = (event.target as Element | null)?.closest?.("a[href]");
+    const href = link?.getAttribute("href");
+    if (!href) return;
+
+    const label = outboundLabel(href);
+    if (label) track("outbound_click", label);
+  };
+
+  document.addEventListener("click", onClick, { capture: true });
+  return () => document.removeEventListener("click", onClick, { capture: true });
+};
+
+const DEPTHS = [50, 90] as const;
+
+/** Sections and depths already reported, so a scroll back up sends nothing. */
+const seen = new Set<string>();
+
+/**
+ * Per-route engagement: how far down the page the visitor got, and which
+ * marked sections actually entered the viewport. Call once per pathname and
+ * dispose on navigation — the SPA remounts the route subtree, so both the
+ * observers and the "already sent" keys are path-scoped.
+ */
+export const trackPageEngagement = (pathname: string): (() => void) => {
+  const once = (key: string, type: TrackEvent, meta: string) => {
+    const id = `${pathname}|${key}`;
+    if (seen.has(id)) return;
+    seen.add(id);
+    track(type, meta);
+  };
+
+  let frame = 0;
+  const onScroll = () => {
+    if (frame) return;
+    frame = window.requestAnimationFrame(() => {
+      frame = 0;
+      const doc = document.documentElement;
+      const scrollable = doc.scrollHeight - window.innerHeight;
+      // A page that barely scrolls would report 100% for everyone.
+      if (scrollable < 240) return;
+
+      const percent = ((window.scrollY + window.innerHeight) / doc.scrollHeight) * 100;
+      for (const depth of DEPTHS) {
+        if (percent >= depth) once(`depth:${depth}`, "scroll_depth", `${depth}%`);
+      }
+    });
+  };
+
+  // Sections are marked in the JSX with data-track-section. The route's chunk
+  // is lazy, so the nodes usually appear after this runs — hence the
+  // MutationObserver rather than a single querySelectorAll.
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const name = (entry.target as HTMLElement).dataset.trackSection;
+        if (name) once(`section:${name}`, "section_view", name);
+        io.unobserve(entry.target);
+      }
+    },
+    { threshold: 0.35 }
+  );
+
+  const watched = new WeakSet<Element>();
+  const scan = () => {
+    document.querySelectorAll("[data-track-section]").forEach((el) => {
+      if (watched.has(el)) return;
+      watched.add(el);
+      io.observe(el);
+    });
+  };
+
+  const mo = new MutationObserver(scan);
+
+  scan();
+  onScroll();
+  mo.observe(document.body, { childList: true, subtree: true });
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  return () => {
+    window.removeEventListener("scroll", onScroll);
+    if (frame) window.cancelAnimationFrame(frame);
+    mo.disconnect();
+    io.disconnect();
+  };
 };

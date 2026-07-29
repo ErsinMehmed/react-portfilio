@@ -41,7 +41,9 @@ const Resume = () => {
         </InViewAnimation>
 
         <InViewAnimation>
-          <div className='mb-6 mt-12 flex items-center gap-2.5'>
+          <div
+            data-track-section='experience'
+            className='mb-6 mt-12 flex items-center gap-2.5'>
             <IconWork className='h-5 w-5 text-brand' />
             <h2 className='font-display text-xl font-bold tracking-tight text-slate-800 dark:text-slate-100 sm:text-2xl'>
               {t("resume.experience")}
@@ -63,12 +65,18 @@ const Resume = () => {
         </InViewAnimation>
       </div>
 
+      {/* data-track-section: read by src/lib/track.ts, so /stats can show how
+          far down the CV a visitor actually got. */}
       <InViewAnimation>
-        <Recommendations />
+        <div data-track-section='recommendations'>
+          <Recommendations />
+        </div>
       </InViewAnimation>
 
       <InViewAnimation delay={0.15}>
-        <SkillsFilterSection />
+        <div data-track-section='skills'>
+          <SkillsFilterSection />
+        </div>
       </InViewAnimation>
     </Layout>
   );
