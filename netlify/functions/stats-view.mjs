@@ -125,6 +125,8 @@ ${FONTS}
   --surface:#ffffff;--surface-2:#f1f5f9;--line:#e2e8f0;
   --text:#0f172a;--text-2:#334155;--muted:#64748b;--faint:#94a3b8;
   --up:#059669;--down:#e11d48;--shadow:0 1px 2px rgba(15,23,42,.05),0 12px 32px -18px rgba(15,23,42,.30);
+  --tip-bg:#0f172a;--tip-text:#f8fafc;--tip-muted:rgba(248,250,252,.66);--tip-line:rgba(255,255,255,.10);
+  --tip-shadow:0 12px 26px -14px rgba(15,23,42,.75);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -132,6 +134,8 @@ ${FONTS}
   --surface:#0f172a;--surface-2:#1e293b;--line:#1e293b;
   --text:#e2e8f0;--text-2:#cbd5e1;--muted:#94a3b8;--faint:#64748b;
   --up:#34d399;--down:#fb7185;--shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -22px rgba(0,0,0,.9);
+  --tip-bg:#1e293b;--tip-text:#f1f5f9;--tip-muted:#94a3b8;--tip-line:rgba(255,255,255,.12);
+  --tip-shadow:0 14px 30px -16px rgba(0,0,0,.95);
   color-scheme:dark;
 }}
 :root[data-theme="dark"]{
@@ -139,6 +143,8 @@ ${FONTS}
   --surface:#0f172a;--surface-2:#1e293b;--line:#1e293b;
   --text:#e2e8f0;--text-2:#cbd5e1;--muted:#94a3b8;--faint:#64748b;
   --up:#34d399;--down:#fb7185;--shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -22px rgba(0,0,0,.9);
+  --tip-bg:#1e293b;--tip-text:#f1f5f9;--tip-muted:#94a3b8;--tip-line:rgba(255,255,255,.12);
+  --tip-shadow:0 14px 30px -16px rgba(0,0,0,.95);
   color-scheme:dark;
 }
 
@@ -218,14 +224,48 @@ form.inline{display:inline}
 /* align-items:stretch is load-bearing: it gives every column a definite
    height, which is what the bars' percentage heights resolve against. */
 .chart{display:flex;align-items:stretch;gap:6px;height:112px}
-.col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;min-width:0;position:relative}
 .col .bar{
   border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,var(--brand),rgba(27,116,228,.45));
   min-height:3px;transition:filter .18s;
 }
 .col.on .bar{background:linear-gradient(180deg,#7c3aed,var(--brand))}
 .col.zero .bar{background:var(--surface-2)}
-.col:hover .bar{filter:brightness(1.12)}
+.col:hover .bar,.col:focus-visible .bar{filter:brightness(1.12)}
+.col:focus-visible{outline:none}
+.col:focus-visible .bar{outline:2px solid var(--brand);outline-offset:2px}
+
+/* custom bar tooltip. --h is the bar's own height, set inline per column, so the
+   bubble tracks the top of the bar instead of the top of the column. It lives on
+   .col (not inside .bar) because the hover brightness filter would tint it. */
+.tip{
+  /* min() caps how high the bubble can climb: a full-height bar would otherwise
+     push it out of the card and over the heading. */
+  position:absolute;left:50%;bottom:calc(min(var(--h,0%),52%) + 12px);
+  z-index:5;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:6px 10px;border-radius:10px;white-space:nowrap;
+  background:var(--tip-bg);color:var(--tip-text);
+  border:1px solid var(--tip-line);box-shadow:var(--tip-shadow);
+  opacity:0;transform:translate(-50%,5px) scale(.95);transform-origin:50% 100%;
+  transition:opacity .15s ease,transform .24s cubic-bezier(.22,1,.36,1);
+}
+.tip b{font-family:"Bricolage Grotesque","Onest",sans-serif;font-size:14.5px;font-weight:700;line-height:1.1}
+.tip i{font-style:normal;font-size:11px;font-weight:600;color:var(--tip-muted)}
+.tip::after{
+  content:"";position:absolute;top:100%;left:50%;width:9px;height:9px;
+  background:var(--tip-bg);border:1px solid var(--tip-line);border-top:0;border-left:0;
+  border-radius:0 0 3px 0;transform:translate(-50%,-5px) rotate(45deg);
+}
+.col:hover .tip,.col:focus-visible .tip{opacity:1;transform:translate(-50%,0) scale(1)}
+/* edge columns: pin the bubble inside the card and slide the arrow to the bar */
+.col:first-child .tip{left:0;transform:translate(0,5px) scale(.95);transform-origin:14px 100%}
+.col:first-child:hover .tip,.col:first-child:focus-visible .tip{transform:translate(0,0) scale(1)}
+.col:first-child .tip::after{left:14px}
+.col:last-child .tip{left:auto;right:0;transform:translate(0,5px) scale(.95);transform-origin:calc(100% - 14px) 100%}
+.col:last-child:hover .tip,.col:last-child:focus-visible .tip{transform:translate(0,0) scale(1)}
+.col:last-child .tip::after{left:auto;right:14px;transform:translate(50%,-5px) rotate(45deg)}
+@media (prefers-reduced-motion:reduce){.tip{transition:opacity .15s ease}}
 .xaxis{display:flex;gap:6px;margin-top:8px}
 .xaxis span{flex:1;text-align:center;font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden}
 
@@ -374,12 +414,14 @@ export const rankedList = (title, rows, label = (k) => k, limit = 8) => {
 export const barChart = (title, bars, hint = "") => {
   const max = Math.max(1, ...bars.map((b) => b.value));
   const cols = bars
-    .map(
-      (b) =>
-        `<div class="col${b.active ? " on" : ""}${b.value ? "" : " zero"}" title="${esc(
-          `${b.label}: ${num(b.value)}`
-        )}"><span class="bar" style="height:${b.value ? pct(b.value, max) : 3}%"></span></div>`
-    )
+    .map((b) => {
+      const h = `${b.value ? pct(b.value, max) : 3}%`;
+      return `<div class="col${b.active ? " on" : ""}${b.value ? "" : " zero"}" style="--h:${h}" role="img" tabindex="0" aria-label="${esc(
+        `${b.label}: ${num(b.value)}`
+      )}"><span class="tip" aria-hidden="true"><b class="tnum">${num(b.value)}</b><i>${esc(
+        b.label
+      )}</i></span><span class="bar" style="height:${h}"></span></div>`;
+    })
     .join("");
   const axis = bars.map((b) => `<span>${esc(b.axis ?? b.label)}</span>`).join("");
 
