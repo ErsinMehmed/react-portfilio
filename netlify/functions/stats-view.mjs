@@ -357,7 +357,10 @@ table.tbl .rate.low{color:var(--faint)}
 
 /* privacy panel */
 .privacy{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
-.privacy p{margin:0;color:var(--muted);font-size:13px;max-width:62ch}
+.privacy p{margin:0;color:var(--muted);font-size:13px;line-height:1.65;max-width:62ch}
+.privacy p+p{margin-top:7px}
+.privacy .state+p{margin-top:8px}
+.privacy .head{display:flex;flex-direction:column}
 .privacy b{color:var(--text-2)}
 .state{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;color:var(--text-2)}
 .dot{width:8px;height:8px;border-radius:999px;background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 20%,transparent)}
@@ -650,10 +653,8 @@ export const maintenancePanel = ({ day, range, wipe, periodLabel, counts }) => {
   return `<section class="card privacy">
   <div>
     <span class="state">Изтриване на записи</span>
-    <p style="margin-top:6px">
-      Собствените ти посещения отпреди включването на изключването си остават в числата — в записите няма IP,
-      така че никой филтър не може да ги разпознае. Затова изтриването е по период.
-    </p>
+    <p>Собствените ти посещения отпреди включването на изключването си остават в числата.</p>
+    <p>В записите няма IP, така че никой филтър не може да ги разпознае — затова изтриването е по период, не по посетител.</p>
   </div>
   <div class="row">
     <a class="btn" href="/stats?day=${encodeURIComponent(day)}&range=${range}&wipe=range">Изтрий периода</a>
@@ -667,15 +668,14 @@ export const privacyPanel = ({ excluded, day, range, count }) => `<section class
     <span class="state"><span class="dot${excluded ? "" : " off"}"></span>${
       excluded ? "Твоите посещения не се броят" : "Твоите посещения се броят"
     }</span>
-    <p style="margin-top:6px">
-      ${
-        excluded
-          ? "Това устройство и текущият ти IP адрес се пропускат при записа. Съхранява се само необратим хеш на адреса, не самият адрес."
-          : "Включи изключването, за да не влизат собствените ти посещения в числата. Пази се само необратим хеш на IP адреса, не самият адрес."
-      }
-      ${count ? `<b>Изключени адреси: ${num(count)}.</b>` : ""}
-      Вече записаните събития остават — изтриват се само през панела отдолу.
-    </p>
+    <p>${
+      excluded
+        ? "Това устройство и текущият ти IP адрес се пропускат при записа. Съхранява се само необратим хеш на адреса, не самият адрес."
+        : "Включи изключването, за да не влизат собствените ти посещения в числата. Пази се само необратим хеш на IP адреса, не самият адрес."
+    }</p>
+    <p>${
+      count ? `<b>Изключени адреси: ${num(count)}.</b> ` : ""
+    }Вече записаните събития остават — изтриват се само през панела отгоре.</p>
   </div>
   <form method="post" action="/stats">
     <input type="hidden" name="action" value="${excluded ? "include_me" : "exclude_me"}">
