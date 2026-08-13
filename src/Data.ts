@@ -151,19 +151,19 @@ const experiences: Experience[] = [
   },
   {
     title: "experience.fullstackDev.title",
-    period: "10.2022 - 06.2023",
+    period: "10.2021 - 06.2023",
     location: "location.varna",
     company: "company.jamesIt",
   },
   {
     title: "experience.itSupport.title",
-    period: "04.2022 - 09.2022",
+    period: "02.2021 - 06.2021",
     location: "location.varna",
     company: "company.energoPro",
   },
   {
     title: "experience.managerSmallCompany.title",
-    period: "04.2021 - 10.2021",
+    period: "04.2020 - 10.2020",
     location: "location.varna",
     company: "company.briella",
   },
@@ -306,6 +306,14 @@ const techSkills: TechSkill[] = [
     color: "bg-blue-400",
   },
   {
+    title: "React Native",
+    kind: "Frontend",
+    description: "skillDesc.reactNative",
+    years: 1,
+    projects: 1,
+    color: "bg-cyan-500",
+  },
+  {
     title: "Mobx",
     kind: "Frontend",
     description: "skillDesc.mobx",
@@ -434,14 +442,6 @@ const techSkills: TechSkill[] = [
     description: "skillDesc.github",
     years: 5,
     projects: 14,
-    color: "bg-rose-400",
-  },
-  {
-    title: "Jira",
-    kind: "Other",
-    description: "skillDesc.jira",
-    years: 4,
-    projects: 4,
     color: "bg-rose-400",
   },
   {

@@ -25,7 +25,6 @@ import {
   siMongodb,
   siPostgresql,
   siGithub,
-  siJira,
   siClaude,
 } from "simple-icons";
 
@@ -39,6 +38,9 @@ const iconMap: Record<string, SimpleIcon> = {
   "Vue.js": siVuedotjs,
   "Inertia.js": siInertia,
   "React.js": siReact,
+  // simple-icons ships no dedicated React Native mark; the React atom is the
+  // brand's own logo for it.
+  "React Native": siReact,
   Mobx: siMobx,
   jQuery: siJquery,
   PHP: siPhp,
@@ -50,7 +52,6 @@ const iconMap: Record<string, SimpleIcon> = {
   MongoDB: siMongodb,
   PostgreSQL: siPostgresql,
   GitHub: siGithub,
-  Jira: siJira,
   "Claude Code": siClaude,
 };
 

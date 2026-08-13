@@ -12,7 +12,7 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: 6, suffix: "+", label: "stats.yearsOfExperience" },
+  { value: 5, suffix: "+", label: "stats.yearsOfExperience" },
   {
     value: projects.professional.length + projects.personal.length,
     suffix: "+",

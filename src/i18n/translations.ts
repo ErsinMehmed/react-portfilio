@@ -163,8 +163,8 @@ export const translations = {
 
   // --- About page intro ---
   "about.intro1": {
-    en: "Hi, I'm Ersin, a software developer. I've been programming for over 6 years, more than 4 of them in professional software development. I've worked on a range of projects, building solutions both in a team and on my own. For me, code quality, good architecture, and attention to detail come first on every project.",
-    bg: "Здравейте, казвам се Ерсин и съм софтуерен разработчик. Занимавам се с програмиране от над 6 години, като повече от 4 от тях са свързани с професионална разработка на софтуер. Работил съм по различни проекти, изграждайки решения както в екипна среда, така и самостоятелно. За мен качеството на кода, добрата архитектура и вниманието към детайла са основни при всеки проект.",
+    en: "Hi, I'm Ersin, a software developer with over 5 years of professional software development experience. I've worked on a range of projects, building solutions both in a team and on my own. For me, code quality, good architecture, and attention to detail come first on every project.",
+    bg: "Здравейте, казвам се Ерсин и съм софтуерен разработчик с над 5 години професионален опит в разработката на софтуер. Работил съм по различни проекти, изграждайки решения както в екипна среда, така и самостоятелно. За мен качеството на кода, добрата архитектура и вниманието към детайла са основни при всеки проект.",
   },
   "about.intro2": {
     en: "I develop both back-end and front-end applications, with web development as my main focus. I'm always sharpening my skills and keeping up with new technologies. On this site you can browse some of my projects and the technologies I work with.",
@@ -350,6 +350,10 @@ export const translations = {
     en: "My main library for building scalable, component-driven interfaces.",
     bg: "Основната ми библиотека за изграждане на мащабируеми, компонентно-ориентирани интерфейси.",
   },
+  "skillDesc.reactNative": {
+    en: "Build cross-platform mobile apps with React Native, reusing my React component patterns for iOS and Android.",
+    bg: "Изграждам мобилни приложения за iOS и Android с React Native, използвайки същите компонентни подходи както в React.",
+  },
   "skillDesc.mobx": {
     en: "My preferred state manager in React, keeping complex application state predictable and reactive.",
     bg: "Предпочитаният ми state мениджър в React, който поддържа сложното състояние на приложението предвидимо и реактивно.",
@@ -401,10 +405,6 @@ export const translations = {
   "skillDesc.github": {
     en: "My daily tool for version control, pull requests, and collaborating smoothly across a team.",
     bg: "Ежедневният ми инструмент за контрол на версиите, pull requests и безпроблемна работа в екип.",
-  },
-  "skillDesc.jira": {
-    en: "Run agile workflows in Jira, from sprint planning and issue tracking to managing boards.",
-    bg: "Управлявам agile процеси в Jira, от планиране на спринтове и проследяване на задачи до управление на дъски.",
   },
 
   // --- Skill cards with lists ---

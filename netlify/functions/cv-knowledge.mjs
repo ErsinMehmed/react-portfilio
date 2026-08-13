@@ -7,7 +7,7 @@
 
 export const cvContext = `
 [Source: Profile]
-Name: Ersin Hyusein (also written Ерсин Хюсеин in Bulgarian; git/GitHub handle ErsinMehmed). Role: Senior Full Stack Web Developer. Based in Varna, Bulgaria. Born 13 July 1999 (Bulgarian nationality). Over 6 years of programming experience, more than 4 of them professional. Core strength is web development across the full stack, with a strong backend focus. Currently a backend web developer at MyPOS Technologies (fintech/payments).
+Name: Ersin Hyusein (also written Ерсин Хюсеин in Bulgarian; git/GitHub handle ErsinMehmed). Role: Senior Full Stack Web Developer. Based in Varna, Bulgaria. Born 13 July 1999 (Bulgarian nationality). Over 5 years of professional software development experience. Core strength is web development across the full stack, with a strong backend focus. Currently a backend web developer at MyPOS Technologies (fintech/payments).
 
 [Source: Contact]
 Email: ersin99mehmed@gmail.com. Phone: +359 899 626273. Location: Varna, Bulgaria. A downloadable CV/resume (PDF) is available on the portfolio site in both English and Bulgarian. Best first contact is email or LinkedIn.
@@ -24,13 +24,13 @@ Bulgarian (native), English (professional working proficiency — this portfolio
 Backend web developer at MyPOS Technologies (a fintech / payments company) in Varna, from July 2023 to present. Works on payment-related web systems and partner-facing platforms.
 
 [Source: Full Stack Developer at James IT]
-Full stack web developer at James IT Services (Varna) from October 2022 to June 2023. Built web platforms with Vue.js, Inertia.js, Laravel and MySQL.
+Full stack web developer at James IT Services (Varna) from October 2021 to June 2023. Built web platforms with Vue.js, Inertia.js, Laravel and MySQL.
 
 [Source: IT Support at ENERGO PRO]
-IT support and consultant at ENERGO PRO (Varna) from April 2022 to September 2022.
+IT support and consultant at ENERGO PRO (Varna) from February 2021 to June 2021.
 
 [Source: Manager at Briella]
-Manager in a small company (Briella Ltd, Varna) from April 2021 to October 2021.
+Manager in a small company (Briella Ltd, Varna) from April 2020 to October 2020.
 
 [Source: Currency Cashier at Edives]
 Currency cashier at Edives Ltd (Golden Sands) from April 2019 to September 2019.
@@ -78,7 +78,7 @@ A personal desktop system for work process management: add products and employee
 A personal system for managing a pizzeria's work process: add products by criteria, view and filter products, enter stock, report used products. Tech: Java, SQL, SQLite.
 
 [Source: Frontend Skills]
-HTML (6 years), CSS (6), Tailwind (4), Bootstrap (4), JavaScript (6), TypeScript (3), Vue.js (2), Inertia.js (2), React.js (4, primary library), Mobx (4, preferred state manager), jQuery (2), AJAX (5).
+HTML (6 years), CSS (6), Tailwind (4), Bootstrap (4), JavaScript (6), TypeScript (3), Vue.js (2), Inertia.js (2), React.js (4, primary library), React Native (1, cross-platform mobile apps for iOS and Android), Mobx (4, preferred state manager), jQuery (2), AJAX (5).
 
 [Source: Backend Skills]
 PHP (5, primary backend language), Symfony (3), Laravel (2), Next.js (3), Node.js (1). Builds REST APIs, CRUD logic, authentication, queues.
@@ -90,7 +90,7 @@ MySQL (5), SQL (5), MongoDB (1), PostgreSQL (1). Schema design, queries, optimiz
 Claude Code (primary agentic coding partner: custom AI agents, reusable AI skills, MCP servers, automated multi-step workflows) and OpenAI Codex (feature generation, refactoring/debugging, rapid prototyping). Uses AI to automate real developer workflows.
 
 [Source: Delivery and Tooling]
-GitHub (5 years), Jira (4), Testing (3: unit, integration, end-to-end), CI/CD (1). Works in Agile teams with sprint planning, standups and continuous delivery; cares about clean, testable code.
+GitHub (5 years), Testing (3: unit, integration, end-to-end), CI/CD (1). Works in Agile teams with sprint planning, standups and continuous delivery; cares about clean, testable code.
 
 [Source: MyPOS AutoPilot AI Award]
 First place among 24 company-wide submissions in MyPOS's internal AI innovation contest in 2026, for AutoPilot: an end-to-end automation of developers' day-to-day workflow, built with Claude Code.
@@ -117,5 +117,5 @@ This portfolio website is itself a work sample built by Ersin. Stack: React 18 +
 Ersin is a senior full-stack web developer whose core strength is the backend (PHP with Symfony and Laravel, REST APIs, MySQL/MongoDB) paired with modern, polished React/TypeScript front-ends. He has real fintech/payments experience (MyPOS payment systems and partner portal, Stripe integration) and hands-on AI experience (Claude Code, OpenAI Codex, and a first-place internal AI-automation award). He leads technical and architectural decisions, mentors junior and mid-level developers, runs code reviews, and works in Agile teams with CI/CD, testing (unit/integration/e2e) and continuous delivery. He cares about clean, testable code, good architecture and attention to detail.
 
 [Source: Common Questions]
-Total experience: 6+ years programming, 4+ professional. Seniority: Senior. Strongest area: backend + full-stack web. Primary languages/frameworks: JavaScript/TypeScript, React (main), PHP (main backend), Symfony, Laravel, Next.js, Vue.js. Databases: MySQL and SQL (strongest), plus MongoDB and PostgreSQL. Payments/fintech: yes — direct experience at MyPOS and with Stripe. AI: yes — uses AI agents/tools daily and won an internal AI innovation contest. Leadership: yes — architecture decisions, mentoring, code reviews. Testing & delivery: unit/integration/e2e testing, CI/CD, Agile. Education: Master's + Bachelor's from the University of Economics - Varna. Location: Varna, Bulgaria; comfortable working in English.
+Total experience: 5+ years of professional software development. Seniority: Senior. Strongest area: backend + full-stack web. Primary languages/frameworks: JavaScript/TypeScript, React (main), PHP (main backend), Symfony, Laravel, Next.js, Vue.js. Databases: MySQL and SQL (strongest), plus MongoDB and PostgreSQL. Payments/fintech: yes — direct experience at MyPOS and with Stripe. AI: yes — uses AI agents/tools daily and won an internal AI innovation contest. Leadership: yes — architecture decisions, mentoring, code reviews. Testing & delivery: unit/integration/e2e testing, CI/CD, Agile. Education: Master's + Bachelor's from the University of Economics - Varna. Location: Varna, Bulgaria; comfortable working in English.
 `.trim();
